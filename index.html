@@ -4,117 +4,70 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090d25">
-<title>QUIZ ARENA 2.1</title>
+<title>QUIZ ARENA 2.2</title>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
+ margin:0;padding:14px;min-height:100vh;
  background:radial-gradient(circle at top,#303d83,#090d25 65%);
- color:white;
- font-family:Arial,sans-serif;
- min-height:100vh;
- padding:14px;
+ color:white;font-family:Arial,sans-serif
 }
 .container{max-width:650px;margin:auto}
 header{text-align:center;padding:15px}
-.logo{
- font-size:34px;font-weight:1000;
- color:#ffd166;
- text-shadow:0 0 20px #ffb70066;
-}
+.logo{font-size:34px;font-weight:1000;color:#ffd166}
 .logo span{color:#4de3ff}
 .tagline{color:#b9c8f5;font-size:12px;margin:8px}
 .card{
  background:linear-gradient(145deg,#202b59,#111832);
- border:1px solid #5368a5;
- border-radius:20px;
- padding:20px;
- margin:15px 0;
- box-shadow:0 10px 30px #0005;
+ border:1px solid #5368a5;border-radius:20px;
+ padding:20px;margin:15px 0;box-shadow:0 10px 30px #0005
 }
 h2{text-align:center}
 button{cursor:pointer;border:0;font-weight:bold}
 .main{
  width:100%;padding:15px;border-radius:12px;
  background:linear-gradient(90deg,#ffd166,#ff9f43);
- color:#11152e;font-size:17px;margin-top:12px;
+ color:#11152e;font-size:16px;margin-top:12px
 }
 .secondary{
- background:#354477;color:white;
- padding:12px;border-radius:12px;
- margin:4px;
+ background:#354477;color:white;padding:12px;
+ border-radius:12px;margin:4px
 }
-.grid{
- display:grid;grid-template-columns:1fr 1fr;gap:10px;
-}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .category{
  padding:16px 5px;border-radius:13px;
- background:#293866;color:white;
- border:1px solid #5368a5;
+ background:#293866;color:white;border:1px solid #5368a5
 }
-.category.active{
- background:#8449a5;border:2px solid #ffd166;
-}
-.stats{
- display:grid;grid-template-columns:repeat(3,1fr);
- gap:8px;text-align:center;
-}
+.category.active{background:#8449a5;border:2px solid #ffd166}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
 .stat{
- background:#0b1433;padding:12px 5px;
- border-radius:12px;color:#ffd166;
- font-weight:bold;font-size:13px;
+ background:#0b1433;padding:12px 5px;border-radius:12px;
+ color:#ffd166;font-weight:bold;font-size:13px
 }
 .option{
  width:100%;padding:15px;margin:7px 0;
  background:#293866;color:white;text-align:left;
- border-radius:12px;border:1px solid #6275b2;
- font-size:15px;
+ border-radius:12px;border:1px solid #6275b2;font-size:15px
 }
 .option.correct{background:#087b58}
 .option.wrong{background:#a72d50}
 .option:disabled{opacity:1}
-.progress{
- height:9px;background:#080d20;
- border-radius:10px;margin:15px 0;
-}
+.progress{height:9px;background:#080d20;border-radius:10px;margin:15px 0}
 .bar{
- height:100%;
- background:linear-gradient(90deg,#4de3ff,#ff4f9a);
- width:0%;border-radius:10px;
+ height:100%;background:linear-gradient(90deg,#4de3ff,#ff4f9a);
+ width:0%;border-radius:10px
 }
-.timer{
- text-align:center;font-size:30px;
- font-weight:900;color:#ffd166;margin:10px;
-}
+.timer{text-align:center;font-size:30px;font-weight:900;color:#ffd166;margin:10px}
 .hide{display:none!important}
-#question{
- font-size:21px;line-height:1.5;text-align:center;
-}
-#feedback{
- text-align:center;min-height:25px;
- font-weight:bold;color:#ffd166;margin:12px 0;
-}
+#question{font-size:21px;line-height:1.5;text-align:center}
+#feedback{text-align:center;min-height:25px;font-weight:bold;color:#ffd166;margin:12px 0}
 .result{text-align:center}
-.bigscore{
- font-size:50px;color:#ffd166;font-weight:1000;
-}
-.rank{
- padding:12px;background:#26345f;
- margin:8px 0;border-radius:10px;
-}
-.voice-panel{
- display:flex;justify-content:center;
- flex-wrap:wrap;gap:7px;margin:12px 0;
-}
-.voice-status{
- text-align:center;font-size:12px;
- color:#aab8df;margin:8px;
-}
-footer{
- text-align:center;font-size:12px;
- color:#aab8df;padding:20px;
-}
+.bigscore{font-size:50px;color:#ffd166;font-weight:1000}
+.rank{padding:12px;background:#26345f;margin:8px 0;border-radius:10px}
+.voice-panel{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:12px 0}
+.voice-status{text-align:center;font-size:12px;color:#aab8df;margin:8px}
+footer{text-align:center;font-size:12px;color:#aab8df;padding:20px}
 </style>
 </head>
 
@@ -129,61 +82,36 @@ footer{
 <button class="secondary" onclick="toggleLanguage()" id="lang">
 नेपाली / English
 </button>
-
 <button class="secondary" onclick="toggleVoice()" id="voiceBtn">
 🔊 VOICE ON
 </button>
+<button class="secondary" onclick="testVoice()">
+🎤 TEST VOICE
+</button>
 </div>
-
-<div class="voice-status" id="voiceStatus">
-Voice Ready
-</div>
+<div class="voice-status" id="voiceStatus">Checking Voice...</div>
 </header>
 
-<!-- HOME -->
-
 <section id="home">
-
 <div class="card">
 <h2 id="welcome">🎮 स्वागत छ!</h2>
-
 <div class="stats">
-<div class="stat">
-⭐ BEST<br><span id="best">0</span>
-</div>
-<div class="stat">
-🏅 LEVEL<br><span id="level">1</span>
-</div>
-<div class="stat">
-💎 TOTAL XP<br><span id="xp">0</span>
-</div>
+<div class="stat">⭐ BEST<br><span id="best">0</span></div>
+<div class="stat">🏅 LEVEL<br><span id="level">1</span></div>
+<div class="stat">💎 TOTAL XP<br><span id="xp">0</span></div>
 </div>
 </div>
 
 <div class="card">
 <h3 id="selectTitle">📚 विषय छान्नुहोस्</h3>
-
 <div class="grid" id="categories"></div>
-
-<button class="main" onclick="startGame(false)" id="start">
-▶ START GAME
-</button>
-
-<button class="main" onclick="startGame(true)">
-🎁 DAILY CHALLENGE
-</button>
-
-<button class="main" onclick="showLeaderboard()">
-🥇 LEADERBOARD
-</button>
+<button class="main" onclick="startGame(false)" id="start">▶ START GAME</button>
+<button class="main" onclick="startGame(true)">🎁 DAILY CHALLENGE</button>
+<button class="main" onclick="showLeaderboard()">🥇 LEADERBOARD</button>
 </div>
-
 </section>
 
-<!-- GAME -->
-
 <section id="game" class="card hide">
-
 <div class="stats">
 <div class="stat">QUESTION<br><span id="qnum">1</span></div>
 <div class="stat">SCORE<br><span id="score">0</span></div>
@@ -191,10 +119,7 @@ Voice Ready
 </div>
 
 <div class="timer" id="timer">⏱ 15</div>
-
-<div class="progress">
-<div class="bar" id="bar"></div>
-</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
 
 <h2 id="question"></h2>
 
@@ -205,56 +130,30 @@ Voice Ready
 </div>
 
 <div id="answers"></div>
-
 <div id="feedback"></div>
 
-<button class="main hide" id="next" onclick="nextQuestion()">
-NEXT ➜
-</button>
-
-<button class="secondary" onclick="goHome()">
-EXIT GAME
-</button>
-
+<button class="main hide" id="next" onclick="nextQuestion()">NEXT ➜</button>
+<button class="secondary" onclick="goHome()">EXIT GAME</button>
 </section>
-
-<!-- RESULT -->
 
 <section id="result" class="card hide result">
-
 <h1>🏆 GAME OVER!</h1>
-
 <div class="bigscore" id="finalScore">0</div>
-
 <h2 id="resultMessage">Excellent!</h2>
-
 <p id="resultDetails"></p>
-
-<button class="main" onclick="startGame(false)">
-🔄 PLAY AGAIN
-</button>
-
-<button class="main" onclick="goHome()">
-🏠 HOME
-</button>
-
+<button class="main" onclick="startGame(false)">🔄 PLAY AGAIN</button>
+<button class="main" onclick="goHome()">🏠 HOME</button>
 </section>
 
-<!-- LEADERBOARD -->
-
 <section id="leaderboard" class="card hide">
-
 <h2>🥇 TOP 10 LEADERBOARD</h2>
-
 <div id="ranking"></div>
-
 <button class="main" onclick="goHome()">🏠 HOME</button>
-
 </section>
 
 <footer>
 Developed by <b>Dilip Rimal</b><br>
-QUIZ ARENA VERSION 2.1<br>
+QUIZ ARENA VERSION 2.2<br>
 Offline Gaming Experience
 </footer>
 
@@ -262,12 +161,11 @@ Offline Gaming Experience
 
 <script>
 
-// ================= LANGUAGE =================
+// LANGUAGE
 
 let language="ne";
 
 function toggleLanguage(){
-
  language=language==="ne"?"en":"ne";
 
  document.getElementById("lang").textContent=
@@ -290,28 +188,55 @@ function toggleLanguage(){
  if(!document.getElementById("game").classList.contains("hide")){
    showQuestion();
  }
-
 }
 
-// ================= VOICE SYSTEM =================
+// VOICE SYSTEM 2.2
 
 let voiceEnabled=true;
 let availableVoices=[];
+let selectedVoice=null;
 
 function loadVoices(){
-
- if(!("speechSynthesis" in window)) return;
+ if(!("speechSynthesis" in window)){
+   document.getElementById("voiceStatus").textContent=
+   "❌ This browser does not support voice.";
+   return;
+ }
 
  availableVoices=speechSynthesis.getVoices();
 
+ if(availableVoices.length){
+   document.getElementById("voiceStatus").textContent=
+   "✅ "+availableVoices.length+" voices available";
+ }
 }
 
 if("speechSynthesis" in window){
-
  loadVoices();
-
  speechSynthesis.onvoiceschanged=loadVoices;
+}
 
+function getVoice(){
+
+ let wanted=language==="ne"?"ne":"en";
+
+ let voice=availableVoices.find(v=>
+ v.lang.toLowerCase().startsWith(wanted)
+ );
+
+ if(!voice && language==="ne"){
+   voice=availableVoices.find(v=>
+   v.lang.toLowerCase().startsWith("hi")
+   );
+ }
+
+ if(!voice && language==="en"){
+   voice=availableVoices.find(v=>
+   v.lang.toLowerCase().startsWith("en")
+   );
+ }
+
+ return voice;
 }
 
 function toggleVoice(){
@@ -322,93 +247,93 @@ function toggleVoice(){
  voiceEnabled?"🔊 VOICE ON":"🔇 VOICE OFF";
 
  if(!voiceEnabled){
-
    speechSynthesis.cancel();
-
-   document.getElementById("voiceStatus").textContent=
-   "Voice OFF";
-
+   document.getElementById("voiceStatus").textContent="Voice OFF";
  }else{
-
-   document.getElementById("voiceStatus").textContent=
-   "Voice ON";
-
+   loadVoices();
+   document.getElementById("voiceStatus").textContent="Voice ON";
+   testVoice();
  }
-
 }
 
 function speakText(text){
 
- if(!voiceEnabled) return;
+ if(!voiceEnabled)return;
 
  if(!("speechSynthesis" in window)){
-
    document.getElementById("voiceStatus").textContent=
-   "Your browser does not support voice.";
-
+   "Voice not supported. Please use Chrome.";
    return;
-
  }
 
  speechSynthesis.cancel();
 
  let msg=new SpeechSynthesisUtterance(text);
+ selectedVoice=getVoice();
 
- let wanted=language==="ne"?"ne":"en";
-
- let voice=availableVoices.find(v=>
- v.lang.toLowerCase().startsWith(wanted)
- );
-
- if(voice){
-
-   msg.voice=voice;
-   msg.lang=voice.lang;
-
+ if(selectedVoice){
+   msg.voice=selectedVoice;
+   msg.lang=selectedVoice.lang;
  }else{
-
    msg.lang=language==="ne"?"ne-NP":"en-US";
-
  }
 
- msg.rate=0.88;
+ msg.rate=0.85;
  msg.pitch=1;
  msg.volume=1;
 
  msg.onstart=()=>{
- document.getElementById("voiceStatus").textContent=
- language==="ne"?"🔊 प्रश्न सुनिँदैछ...":"🔊 Speaking...";
+ document.getElementById("voiceStatus").textContent="🔊 Speaking...";
  };
 
  msg.onend=()=>{
  document.getElementById("voiceStatus").textContent=
- voice?"🔊 Voice Ready":
- "Voice language may not be installed.";
+ selectedVoice?"✅ Voice Ready":"⚠️ Preferred language voice unavailable";
  };
 
- msg.onerror=()=>{
+ msg.onerror=(e)=>{
  document.getElementById("voiceStatus").textContent=
- "Voice unavailable. Check browser settings.";
+ "❌ Voice Error: "+e.error;
  };
 
  speechSynthesis.speak(msg);
+}
 
+function testVoice(){
+
+ if(!voiceEnabled){
+   voiceEnabled=true;
+   document.getElementById("voiceBtn").textContent="🔊 VOICE ON";
+ }
+
+ loadVoices();
+
+ let message=language==="ne"?
+ "नमस्कार! क्विज एरिनामा स्वागत छ। आवाज परीक्षण सफल भयो।":
+ "Hello! Welcome to Quiz Arena. Voice test successful.";
+
+ speakText(message);
 }
 
 function repeatQuestion(){
 
- if(questions.length===0)return;
+ if(!questions.length)return;
 
  let q=questions[current];
+ let question=language==="ne"?q[1]:q[2];
+ let options=language==="ne"?q[3]:q[4];
 
- speakText(language==="ne"?q[1]:q[2]);
+ let text=question+". "+
+ options.map((a,i)=>
+ ["A","B","C","D"][i]+". "+a
+ ).join(". ");
 
+ speakText(text);
 }
 
-// ================= CATEGORIES =================
+// CATEGORIES
 
 const categories=[
-
 ["all","🌈 सबै विषय","All Categories"],
 ["nepal","🇳🇵 नेपाल GK","Nepal GK"],
 ["science","🔬 विज्ञान","Science"],
@@ -418,94 +343,65 @@ const categories=[
 ["tech","💻 प्रविधि","Technology"],
 ["math","➗ गणित","Mathematics"],
 ["lit","📚 साहित्य","Literature"]
-
 ];
 
 let selected="all";
 
 function renderCategories(){
-
  document.getElementById("categories").innerHTML=
-
  categories.map(c=>`
-
  <button class="category ${selected===c[0]?'active':''}"
  onclick="selectCategory('${c[0]}')">
-
  ${language==="ne"?c[1]:c[2]}
-
- </button>
-
- `).join("");
-
+ </button>`).join("");
 }
 
 function selectCategory(id){
-
  selected=id;
  renderCategories();
-
 }
 
-// ================= QUESTIONS =================
+// QUESTION BANK
 
 const bank=[
 
 ["nepal","नेपालको राजधानी कुन हो?","What is Nepal's capital?",["काठमाडौं","पोखरा","विराटनगर","जनकपुर"],["Kathmandu","Pokhara","Biratnagar","Janakpur"],0],
-
 ["nepal","नेपालको राष्ट्रिय फूल कुन हो?","What is Nepal's national flower?",["गुराँस","कमल","सयपत्री","चमेली"],["Rhododendron","Lotus","Marigold","Jasmine"],0],
-
 ["nepal","नेपालको अग्लो हिमाल कुन हो?","Which is Nepal's highest mountain?",["मकालु","सगरमाथा","धौलागिरि","अन्नपूर्ण"],["Makalu","Everest","Dhaulagiri","Annapurna"],1],
-
 ["nepal","नेपालमा कति प्रदेश छन्?","How many provinces are in Nepal?",["५","६","७","८"],["5","6","7","8"],2],
-
 ["nepal","नेपालको राष्ट्रिय पक्षी कुन हो?","What is Nepal's national bird?",["डाँफे","मयूर","चील","काग"],["Danphe","Peacock","Eagle","Crow"],0],
-
 ["nepal","लुम्बिनी कुन जिल्लामा पर्छ?","Where is Lumbini located?",["रुपन्देही","पाल्पा","दाङ","कास्की"],["Rupandehi","Palpa","Dang","Kaski"],0],
 
 ["science","पानीको रासायनिक सूत्र के हो?","What is water's chemical formula?",["CO2","H2O","O2","NaCl"],["CO2","H2O","O2","NaCl"],1],
-
 ["science","रगत पम्प गर्ने अंग कुन हो?","Which organ pumps blood?",["फोक्सो","मुटु","मिर्गौला","कलेजो"],["Lungs","Heart","Kidney","Liver"],1],
-
 ["science","सूर्य के हो?","What is the Sun?",["ग्रह","तारा","उपग्रह","धूमकेतु"],["Planet","Star","Satellite","Comet"],1],
-
 ["science","बिरुवाले खाना बनाउने प्रक्रिया के हो?","What is photosynthesis?",["प्रकाश संश्लेषण","पाचन","वाष्पीकरण","श्वासप्रश्वास"],["Photosynthesis","Digestion","Evaporation","Respiration"],0],
 
 ["geo","सबैभन्दा ठूलो महासागर कुन हो?","Which is the largest ocean?",["हिन्द","प्रशान्त","आर्कटिक","आन्ध्र"],["Indian","Pacific","Arctic","Atlantic"],1],
-
 ["geo","जापानको राजधानी कुन हो?","What is Japan's capital?",["टोकियो","ओसाका","क्योटो","नारा"],["Tokyo","Osaka","Kyoto","Nara"],0],
-
 ["geo","विश्वमा कति महादेश छन्?","How many continents are there?",["५","६","७","८"],["5","6","7","8"],2],
-
 ["geo","सबैभन्दा ठूलो देश कुन हो?","Which is the largest country by area?",["चीन","रुस","भारत","क्यानडा"],["China","Russia","India","Canada"],1],
 
 ["history","ताजमहल कसले बनाएका हुन्?","Who commissioned the Taj Mahal?",["अकबर","शाहजहाँ","बाबर","औरंगजेब"],["Akbar","Shah Jahan","Babur","Aurangzeb"],1],
-
 ["history","फ्रान्सेली क्रान्ति कहिले सुरु भयो?","When did the French Revolution begin?",["१७७६","१७८९","१८१५","१९१४"],["1776","1789","1815","1914"],1],
 
 ["sports","क्रिकेटमा एक ओभरमा कति बल हुन्छन्?","How many legal balls are in an over?",["५","६","७","८"],["5","6","7","8"],1],
-
-["sports","फुटबलमा एक टोलीका कति खेलाडी हुन्छन्?","How many players are on a football team on the field?",["९","१०","११","१२"],["9","10","11","12"],2],
-
+["sports","फुटबलमा एक टोलीका कति खेलाडी हुन्छन्?","How many players are on a football team?",["९","१०","११","१२"],["9","10","11","12"],2],
 ["sports","ओलम्पिक खेल कति वर्षमा हुन्छ?","How often are the Summer Olympics held?",["२","३","४","५"],["2","3","4","5"],2],
 
 ["tech","CPU को पूरा रूप के हो?","What does CPU stand for?",["Central Processing Unit","Computer Power Unit","Central Program Unit","Control Processing Unit"],["Central Processing Unit","Computer Power Unit","Central Program Unit","Control Processing Unit"],0],
-
 ["tech","WWW को पूरा रूप के हो?","What does WWW stand for?",["World Wide Web","Wide World Web","Web World Work","World Web Window"],["World Wide Web","Wide World Web","Web World Work","World Web Window"],0],
 
 ["math","१२ × ८ कति हुन्छ?","What is 12 × 8?",["८६","९६","१०६","११२"],["86","96","106","112"],1],
-
 ["math","१०० को २५ प्रतिशत कति हो?","What is 25% of 100?",["१५","२०","२५","३०"],["15","20","25","30"],2],
-
 ["math","१ किलोमिटरमा कति मिटर हुन्छ?","How many metres are in 1 kilometre?",["१००","५००","१०००","१००००"],["100","500","1000","10000"],2],
 
 ["lit","मुनामदनका लेखक को हुन्?","Who wrote Muna Madan?",["भानुभक्त","देवकोटा","पारिजात","लेखनाथ"],["Bhanubhakta","Devkota","Parijat","Lekhnath"],1],
-
 ["lit","नेपाली भाषाका आदिकवि को हुन्?","Who is known as Adikavi?",["भानुभक्त आचार्य","देवकोटा","पारिजात","मोतीराम"],["Bhanubhakta Acharya","Devkota","Parijat","Motiram"],0]
 
 ];
 
-// ================= GAME DATA =================
+// GAME DATA
 
 let questions=[];
 let current=0;
@@ -513,87 +409,52 @@ let points=0;
 let timer=15;
 let timerInterval=null;
 let answered=false;
-
 let totalXP=Number(localStorage.totalXP||0);
 
 function getLevel(){
-
  return Math.min(100,Math.floor(totalXP/100)+1);
-
 }
 
 function updateStats(){
-
- document.getElementById("best").textContent=
- localStorage.bestScore||0;
-
+ document.getElementById("best").textContent=localStorage.bestScore||0;
  document.getElementById("xp").textContent=totalXP;
-
  document.getElementById("level").textContent=getLevel();
-
 }
-
-// ================= SOUND =================
 
 function sound(freq,duration){
-
  try{
-
  let ctx=new(window.AudioContext||window.webkitAudioContext)();
-
  let osc=ctx.createOscillator();
  let gain=ctx.createGain();
-
  osc.frequency.value=freq;
  gain.gain.value=0.08;
-
  osc.connect(gain);
  gain.connect(ctx.destination);
-
  osc.start();
  osc.stop(ctx.currentTime+duration);
-
  }catch(e){}
-
 }
-
-// ================= SHUFFLE =================
 
 function shuffle(arr){
-
  let a=[...arr];
-
  for(let i=a.length-1;i>0;i--){
-
  let j=Math.floor(Math.random()*(i+1));
-
  [a[i],a[j]]=[a[j],a[i]];
-
  }
-
  return a;
-
 }
 
-// ================= START GAME =================
+// START GAME
 
 function startGame(daily){
 
  clearInterval(timerInterval);
-
- if("speechSynthesis" in window){
  speechSynthesis.cancel();
- }
 
- let pool=bank.filter(q=>
- selected==="all"||q[0]===selected
- );
+ let pool=bank.filter(q=>selected==="all"||q[0]===selected);
+ if(daily)pool=[...bank];
 
- if(daily){
- pool=[...bank];
- }
-
- questions=shuffle([...pool]).slice(0,10);
+ questions=shuffle(pool).slice(0,10);
 
  current=0;
  points=0;
@@ -604,10 +465,9 @@ function startGame(daily){
  document.getElementById("game").classList.remove("hide");
 
  showQuestion();
-
 }
 
-// ================= QUESTION =================
+// SHOW QUESTION
 
 function showQuestion(){
 
@@ -616,11 +476,8 @@ function showQuestion(){
 
  let q=questions[current];
 
- document.getElementById("qnum").textContent=
- (current+1)+"/"+questions.length;
-
+ document.getElementById("qnum").textContent=(current+1)+"/"+questions.length;
  document.getElementById("score").textContent=points;
-
  document.getElementById("gameLevel").textContent=getLevel();
 
  document.getElementById("question").textContent=
@@ -630,97 +487,66 @@ function showQuestion(){
  (current/questions.length*100)+"%";
 
  document.getElementById("feedback").textContent="";
-
  document.getElementById("next").classList.add("hide");
 
  let options=language==="ne"?q[3]:q[4];
 
  document.getElementById("answers").innerHTML=
-
  options.map((a,i)=>`
-
  <button class="option" onclick="answer(${i})">
  ${["A","B","C","D"][i]}. ${a}
- </button>
-
- `).join("");
+ </button>`).join("");
 
  updateTimer();
 
- // प्रश्न पढ्ने
-
+ // प्रश्न र विकल्प स्वतः पढ्ने
  setTimeout(()=>{
-
- if(!answered){
- speakText(language==="ne"?q[1]:q[2]);
- }
-
- },400);
+ if(!answered)repeatQuestion();
+ },700);
 
  timerInterval=setInterval(()=>{
-
  timer--;
-
  updateTimer();
 
  if(timer<=0){
-
  clearInterval(timerInterval);
  answer(-1);
-
  }
-
  },1000);
-
 }
 
 function updateTimer(){
-
- document.getElementById("timer").textContent=
- "⏱ "+timer;
-
+ document.getElementById("timer").textContent="⏱ "+timer;
 }
 
-// ================= ANSWER =================
+// ANSWER
 
 function answer(choice){
 
  if(answered)return;
 
  answered=true;
-
  clearInterval(timerInterval);
-
- if("speechSynthesis" in window){
  speechSynthesis.cancel();
- }
 
  let q=questions[current];
  let correct=q[5];
-
  let buttons=document.querySelectorAll(".option");
 
  buttons.forEach((b,i)=>{
-
  b.disabled=true;
-
  if(i===correct)b.classList.add("correct");
-
  else if(i===choice)b.classList.add("wrong");
-
  });
 
  if(choice===correct){
 
  let bonus=timer>=10?5:0;
-
  points+=10+bonus;
-
  sound(800,0.15);
 
  document.getElementById("feedback").textContent=
- "✅ "+(language==="ne"?"सही उत्तर! +":"Correct! +")+
- (10+bonus)+" XP";
+ "✅ "+(language==="ne"?"सही उत्तर! +":"Correct! +")+(10+bonus)+" XP";
 
  speakText(language==="ne"?"सही उत्तर!":"Correct answer!");
 
@@ -728,61 +554,43 @@ function answer(choice){
 
  sound(180,0.2);
 
+ let correctAnswer=language==="ne"?q[3][correct]:q[4][correct];
+
  document.getElementById("feedback").textContent=
- "❌ "+(language==="ne"?"सही उत्तर: ":"Correct answer: ")+
- (language==="ne"?q[3][correct]:q[4][correct]);
+ "❌ "+(language==="ne"?"सही उत्तर: ":"Correct answer: ")+correctAnswer;
 
- speakText(language==="ne"?"गलत उत्तर!":"Wrong answer!");
-
+ speakText(language==="ne"?
+ "गलत उत्तर! सही उत्तर "+correctAnswer:
+ "Wrong answer! Correct answer is "+correctAnswer);
  }
 
  document.getElementById("score").textContent=points;
-
  document.getElementById("next").classList.remove("hide");
 
  document.getElementById("next").textContent=
- current===questions.length-1?
- "🏆 FINISH":"NEXT ➜";
-
+ current===questions.length-1?"🏆 FINISH":"NEXT ➜";
 }
 
-// ================= NEXT =================
+// NEXT
 
 function nextQuestion(){
-
  current++;
-
- if(current<questions.length){
-
- showQuestion();
-
- }else{
-
- finishGame();
-
- }
-
+ if(current<questions.length)showQuestion();
+ else finishGame();
 }
 
-// ================= FINISH =================
+// FINISH
 
 function finishGame(){
 
  clearInterval(timerInterval);
-
- if("speechSynthesis" in window){
  speechSynthesis.cancel();
- }
 
  totalXP+=points;
-
  localStorage.totalXP=totalXP;
 
  let best=Number(localStorage.bestScore||0);
-
- if(points>best){
- localStorage.bestScore=points;
- }
+ if(points>best)localStorage.bestScore=points;
 
  saveLeaderboard(points);
 
@@ -792,9 +600,7 @@ function finishGame(){
  document.getElementById("finalScore").textContent=points;
 
  document.getElementById("resultMessage").textContent=
- points>=80?"🏆 Excellent!":
- points>=50?"🔥 Great Job!":
- "👏 Keep Practicing!";
+ points>=80?"🏆 Excellent!":points>=50?"🔥 Great Job!":"👏 Keep Practicing!";
 
  document.getElementById("resultDetails").textContent=
  "Level: "+getLevel()+" | Total XP: "+totalXP;
@@ -804,56 +610,42 @@ function finishGame(){
  speakText(language==="ne"?
  "खेल समाप्त भयो। तपाईंको स्कोर "+points+" अंक हो।":
  "Game over. Your score is "+points+" points.");
-
 }
 
-// ================= LEADERBOARD =================
+// LEADERBOARD
 
 function saveLeaderboard(score){
 
  let name=localStorage.playerName;
 
  if(!name){
-
  name=prompt("Enter your player name:")||"Player";
-
  localStorage.playerName=name;
-
  }
 
  let list=JSON.parse(localStorage.leaderboard||"[]");
 
  list.push({
-
  name:name,
  score:score,
  date:new Date().toLocaleDateString()
-
  });
 
  list.sort((a,b)=>b.score-a.score);
-
  list=list.slice(0,10);
 
  localStorage.leaderboard=JSON.stringify(list);
-
 }
 
 function escapeHTML(value){
-
  return String(value).replace(/[&<>"']/g,c=>({
-
  "&":"&amp;",
  "<":"&lt;",
  ">":"&gt;",
  '"':"&quot;",
  "'":"&#39;"
-
  }[c]));
-
 }
-
-// ================= LEADERBOARD =================
 
 function showLeaderboard(){
 
@@ -865,39 +657,23 @@ function showLeaderboard(){
  let list=JSON.parse(localStorage.leaderboard||"[]");
 
  document.getElementById("ranking").innerHTML=
-
  list.length?
-
  list.map((p,i)=>`
-
  <div class="rank">
-
  ${["🥇","🥈","🥉"][i]||"🏅"}
-
- ${escapeHTML(p.name)} —
- <b>${p.score} Points</b>
-
+ ${escapeHTML(p.name)} — <b>${p.score} Points</b>
  <small>${escapeHTML(p.date)}</small>
-
- </div>
-
- `).join("")
-
+ </div>`).join("")
  :
-
  "<p>No scores yet. Play your first game!</p>";
-
 }
 
-// ================= HOME =================
+// HOME
 
 function goHome(){
 
  clearInterval(timerInterval);
-
- if("speechSynthesis" in window){
  speechSynthesis.cancel();
- }
 
  document.getElementById("game").classList.add("hide");
  document.getElementById("result").classList.add("hide");
@@ -905,13 +681,13 @@ function goHome(){
  document.getElementById("home").classList.remove("hide");
 
  updateStats();
-
 }
 
-// ================= INIT =================
+// INITIALIZE
 
 renderCategories();
 updateStats();
+loadVoices();
 
 </script>
 </body>
