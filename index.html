@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090d25">
-<title>QUIZ ARENA 2.0</title>
+<title>QUIZ ARENA 2.1</title>
 
 <style>
 *{box-sizing:border-box}
@@ -24,7 +24,7 @@ header{text-align:center;padding:15px}
  text-shadow:0 0 20px #ffb70066;
 }
 .logo span{color:#4de3ff}
-.tagline{color:#b9c8f5;font-size:12px}
+.tagline{color:#b9c8f5;font-size:12px;margin:8px}
 .card{
  background:linear-gradient(145deg,#202b59,#111832);
  border:1px solid #5368a5;
@@ -34,118 +34,86 @@ header{text-align:center;padding:15px}
  box-shadow:0 10px 30px #0005;
 }
 h2{text-align:center}
-button{
- cursor:pointer;
- border:0;
- font-weight:bold;
-}
+button{cursor:pointer;border:0;font-weight:bold}
 .main{
- width:100%;
- padding:15px;
- border-radius:12px;
+ width:100%;padding:15px;border-radius:12px;
  background:linear-gradient(90deg,#ffd166,#ff9f43);
- color:#11152e;
- font-size:17px;
- margin-top:12px;
+ color:#11152e;font-size:17px;margin-top:12px;
 }
 .secondary{
- background:#354477;
- color:white;
- padding:12px;
- border-radius:12px;
+ background:#354477;color:white;
+ padding:12px;border-radius:12px;
+ margin:4px;
 }
 .grid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
+ display:grid;grid-template-columns:1fr 1fr;gap:10px;
 }
 .category{
- padding:16px 5px;
- border-radius:13px;
- background:#293866;
- color:white;
+ padding:16px 5px;border-radius:13px;
+ background:#293866;color:white;
  border:1px solid #5368a5;
 }
 .category.active{
- background:#8449a5;
- border:2px solid #ffd166;
+ background:#8449a5;border:2px solid #ffd166;
 }
 .stats{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:8px;
- text-align:center;
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:8px;text-align:center;
 }
 .stat{
- background:#0b1433;
- padding:12px 5px;
- border-radius:12px;
- color:#ffd166;
- font-weight:bold;
- font-size:13px;
+ background:#0b1433;padding:12px 5px;
+ border-radius:12px;color:#ffd166;
+ font-weight:bold;font-size:13px;
 }
 .option{
- width:100%;
- padding:15px;
- margin:7px 0;
- background:#293866;
- color:white;
- text-align:left;
- border-radius:12px;
- border:1px solid #6275b2;
+ width:100%;padding:15px;margin:7px 0;
+ background:#293866;color:white;text-align:left;
+ border-radius:12px;border:1px solid #6275b2;
  font-size:15px;
 }
 .option.correct{background:#087b58}
 .option.wrong{background:#a72d50}
 .option:disabled{opacity:1}
 .progress{
- height:9px;
- background:#080d20;
- border-radius:10px;
- margin:15px 0;
+ height:9px;background:#080d20;
+ border-radius:10px;margin:15px 0;
 }
 .bar{
  height:100%;
  background:linear-gradient(90deg,#4de3ff,#ff4f9a);
- width:0%;
- border-radius:10px;
+ width:0%;border-radius:10px;
 }
 .timer{
- text-align:center;
- font-size:30px;
- font-weight:900;
- color:#ffd166;
- margin:10px;
+ text-align:center;font-size:30px;
+ font-weight:900;color:#ffd166;margin:10px;
 }
 .hide{display:none!important}
 #question{
- font-size:21px;
- line-height:1.5;
- text-align:center;
+ font-size:21px;line-height:1.5;text-align:center;
 }
 #feedback{
- text-align:center;
- min-height:25px;
- font-weight:bold;
- color:#ffd166;
+ text-align:center;min-height:25px;
+ font-weight:bold;color:#ffd166;margin:12px 0;
 }
 .result{text-align:center}
 .bigscore{
- font-size:50px;
- color:#ffd166;
- font-weight:1000;
+ font-size:50px;color:#ffd166;font-weight:1000;
 }
 .rank{
- padding:12px;
- background:#26345f;
- margin:8px 0;
- border-radius:10px;
+ padding:12px;background:#26345f;
+ margin:8px 0;border-radius:10px;
+}
+.voice-panel{
+ display:flex;justify-content:center;
+ flex-wrap:wrap;gap:7px;margin:12px 0;
+}
+.voice-status{
+ text-align:center;font-size:12px;
+ color:#aab8df;margin:8px;
 }
 footer{
- text-align:center;
- font-size:12px;
- color:#aab8df;
- padding:20px;
+ text-align:center;font-size:12px;
+ color:#aab8df;padding:20px;
 }
 </style>
 </head>
@@ -156,12 +124,24 @@ footer{
 <header>
 <div class="logo">🏆 QUIZ <span>ARENA</span></div>
 <div class="tagline">THINK FAST • PLAY SMART • WIN BIG</div>
+
+<div class="voice-panel">
 <button class="secondary" onclick="toggleLanguage()" id="lang">
 नेपाली / English
 </button>
+
+<button class="secondary" onclick="toggleVoice()" id="voiceBtn">
+🔊 VOICE ON
+</button>
+</div>
+
+<div class="voice-status" id="voiceStatus">
+Voice Ready
+</div>
 </header>
 
 <!-- HOME -->
+
 <section id="home">
 
 <div class="card">
@@ -201,6 +181,7 @@ footer{
 </section>
 
 <!-- GAME -->
+
 <section id="game" class="card hide">
 
 <div class="stats">
@@ -217,6 +198,12 @@ footer{
 
 <h2 id="question"></h2>
 
+<div class="voice-panel">
+<button class="secondary" onclick="repeatQuestion()" id="repeatBtn">
+🔁 प्रश्न फेरि सुनाउनुहोस्
+</button>
+</div>
+
 <div id="answers"></div>
 
 <div id="feedback"></div>
@@ -232,6 +219,7 @@ EXIT GAME
 </section>
 
 <!-- RESULT -->
+
 <section id="result" class="card hide result">
 
 <h1>🏆 GAME OVER!</h1>
@@ -253,6 +241,7 @@ EXIT GAME
 </section>
 
 <!-- LEADERBOARD -->
+
 <section id="leaderboard" class="card hide">
 
 <h2>🥇 TOP 10 LEADERBOARD</h2>
@@ -265,7 +254,7 @@ EXIT GAME
 
 <footer>
 Developed by <b>Dilip Rimal</b><br>
-QUIZ ARENA VERSION 2.0<br>
+QUIZ ARENA VERSION 2.1<br>
 Offline Gaming Experience
 </footer>
 
@@ -278,48 +267,187 @@ Offline Gaming Experience
 let language="ne";
 
 function toggleLanguage(){
+
  language=language==="ne"?"en":"ne";
+
  document.getElementById("lang").textContent=
  language==="ne"?"नेपाली / English":"English / नेपाली";
+
+ document.getElementById("repeatBtn").textContent=
+ language==="ne"?"🔁 प्रश्न फेरि सुनाउनुहोस्":"🔁 Repeat Question";
+
+ document.getElementById("welcome").textContent=
+ language==="ne"?"🎮 स्वागत छ!":"🎮 Welcome!";
+
+ document.getElementById("selectTitle").textContent=
+ language==="ne"?"📚 विषय छान्नुहोस्":"📚 Select Category";
+
+ document.getElementById("start").textContent=
+ language==="ne"?"▶ खेल सुरु गर्नुहोस्":"▶ START GAME";
+
  renderCategories();
+
+ if(!document.getElementById("game").classList.contains("hide")){
+   showQuestion();
+ }
+
+}
+
+// ================= VOICE SYSTEM =================
+
+let voiceEnabled=true;
+let availableVoices=[];
+
+function loadVoices(){
+
+ if(!("speechSynthesis" in window)) return;
+
+ availableVoices=speechSynthesis.getVoices();
+
+}
+
+if("speechSynthesis" in window){
+
+ loadVoices();
+
+ speechSynthesis.onvoiceschanged=loadVoices;
+
+}
+
+function toggleVoice(){
+
+ voiceEnabled=!voiceEnabled;
+
+ document.getElementById("voiceBtn").textContent=
+ voiceEnabled?"🔊 VOICE ON":"🔇 VOICE OFF";
+
+ if(!voiceEnabled){
+
+   speechSynthesis.cancel();
+
+   document.getElementById("voiceStatus").textContent=
+   "Voice OFF";
+
+ }else{
+
+   document.getElementById("voiceStatus").textContent=
+   "Voice ON";
+
+ }
+
+}
+
+function speakText(text){
+
+ if(!voiceEnabled) return;
+
+ if(!("speechSynthesis" in window)){
+
+   document.getElementById("voiceStatus").textContent=
+   "Your browser does not support voice.";
+
+   return;
+
+ }
+
+ speechSynthesis.cancel();
+
+ let msg=new SpeechSynthesisUtterance(text);
+
+ let wanted=language==="ne"?"ne":"en";
+
+ let voice=availableVoices.find(v=>
+ v.lang.toLowerCase().startsWith(wanted)
+ );
+
+ if(voice){
+
+   msg.voice=voice;
+   msg.lang=voice.lang;
+
+ }else{
+
+   msg.lang=language==="ne"?"ne-NP":"en-US";
+
+ }
+
+ msg.rate=0.88;
+ msg.pitch=1;
+ msg.volume=1;
+
+ msg.onstart=()=>{
+ document.getElementById("voiceStatus").textContent=
+ language==="ne"?"🔊 प्रश्न सुनिँदैछ...":"🔊 Speaking...";
+ };
+
+ msg.onend=()=>{
+ document.getElementById("voiceStatus").textContent=
+ voice?"🔊 Voice Ready":
+ "Voice language may not be installed.";
+ };
+
+ msg.onerror=()=>{
+ document.getElementById("voiceStatus").textContent=
+ "Voice unavailable. Check browser settings.";
+ };
+
+ speechSynthesis.speak(msg);
+
+}
+
+function repeatQuestion(){
+
+ if(questions.length===0)return;
+
+ let q=questions[current];
+
+ speakText(language==="ne"?q[1]:q[2]);
+
 }
 
 // ================= CATEGORIES =================
 
 const categories=[
- ["all","🌈 सबै विषय","All Categories"],
- ["nepal","🇳🇵 नेपाल GK","Nepal GK"],
- ["science","🔬 विज्ञान","Science"],
- ["geo","🌍 भूगोल","Geography"],
- ["history","📜 इतिहास","History"],
- ["sports","🏏 खेलकुद","Sports"],
- ["tech","💻 प्रविधि","Technology"],
- ["math","➗ गणित","Mathematics"],
- ["lit","📚 साहित्य","Literature"]
+
+["all","🌈 सबै विषय","All Categories"],
+["nepal","🇳🇵 नेपाल GK","Nepal GK"],
+["science","🔬 विज्ञान","Science"],
+["geo","🌍 भूगोल","Geography"],
+["history","📜 इतिहास","History"],
+["sports","🏏 खेलकुद","Sports"],
+["tech","💻 प्रविधि","Technology"],
+["math","➗ गणित","Mathematics"],
+["lit","📚 साहित्य","Literature"]
+
 ];
 
 let selected="all";
 
 function renderCategories(){
+
  document.getElementById("categories").innerHTML=
+
  categories.map(c=>`
+
  <button class="category ${selected===c[0]?'active':''}"
  onclick="selectCategory('${c[0]}')">
+
  ${language==="ne"?c[1]:c[2]}
+
  </button>
+
  `).join("");
+
 }
 
 function selectCategory(id){
+
  selected=id;
  renderCategories();
+
 }
 
 // ================= QUESTIONS =================
-
-// Format:
-// category, Nepali question, English question,
-// Nepali answers, English answers, correct answer index
 
 const bank=[
 
@@ -385,28 +513,34 @@ let points=0;
 let timer=15;
 let timerInterval=null;
 let answered=false;
-let dailyMode=false;
 
 let totalXP=Number(localStorage.totalXP||0);
 
 function getLevel(){
+
  return Math.min(100,Math.floor(totalXP/100)+1);
+
 }
 
 function updateStats(){
+
  document.getElementById("best").textContent=
  localStorage.bestScore||0;
 
  document.getElementById("xp").textContent=totalXP;
 
  document.getElementById("level").textContent=getLevel();
+
 }
 
 // ================= SOUND =================
 
 function sound(freq,duration){
+
  try{
- let ctx=new (window.AudioContext||window.webkitAudioContext)();
+
+ let ctx=new(window.AudioContext||window.webkitAudioContext)();
+
  let osc=ctx.createOscillator();
  let gain=ctx.createGain();
 
@@ -418,20 +552,27 @@ function sound(freq,duration){
 
  osc.start();
  osc.stop(ctx.currentTime+duration);
+
  }catch(e){}
+
 }
 
 // ================= SHUFFLE =================
 
 function shuffle(arr){
+
  let a=[...arr];
 
  for(let i=a.length-1;i>0;i--){
+
  let j=Math.floor(Math.random()*(i+1));
+
  [a[i],a[j]]=[a[j],a[i]];
+
  }
 
  return a;
+
 }
 
 // ================= START GAME =================
@@ -440,14 +581,16 @@ function startGame(daily){
 
  clearInterval(timerInterval);
 
- dailyMode=daily;
+ if("speechSynthesis" in window){
+ speechSynthesis.cancel();
+ }
 
  let pool=bank.filter(q=>
  selected==="all"||q[0]===selected
  );
 
  if(daily){
- pool=shuffle([...bank]);
+ pool=[...bank];
  }
 
  questions=shuffle([...pool]).slice(0,10);
@@ -461,6 +604,7 @@ function startGame(daily){
  document.getElementById("game").classList.remove("hide");
 
  showQuestion();
+
 }
 
 // ================= QUESTION =================
@@ -492,29 +636,49 @@ function showQuestion(){
  let options=language==="ne"?q[3]:q[4];
 
  document.getElementById("answers").innerHTML=
+
  options.map((a,i)=>`
+
  <button class="option" onclick="answer(${i})">
  ${["A","B","C","D"][i]}. ${a}
  </button>
+
  `).join("");
 
  updateTimer();
 
+ // प्रश्न पढ्ने
+
+ setTimeout(()=>{
+
+ if(!answered){
+ speakText(language==="ne"?q[1]:q[2]);
+ }
+
+ },400);
+
  timerInterval=setInterval(()=>{
+
  timer--;
+
  updateTimer();
 
  if(timer<=0){
+
  clearInterval(timerInterval);
  answer(-1);
+
  }
+
  },1000);
 
 }
 
 function updateTimer(){
+
  document.getElementById("timer").textContent=
  "⏱ "+timer;
+
 }
 
 // ================= ANSWER =================
@@ -527,16 +691,23 @@ function answer(choice){
 
  clearInterval(timerInterval);
 
+ if("speechSynthesis" in window){
+ speechSynthesis.cancel();
+ }
+
  let q=questions[current];
  let correct=q[5];
 
  let buttons=document.querySelectorAll(".option");
 
  buttons.forEach((b,i)=>{
+
  b.disabled=true;
 
  if(i===correct)b.classList.add("correct");
+
  else if(i===choice)b.classList.add("wrong");
+
  });
 
  if(choice===correct){
@@ -544,11 +715,14 @@ function answer(choice){
  let bonus=timer>=10?5:0;
 
  points+=10+bonus;
+
  sound(800,0.15);
 
  document.getElementById("feedback").textContent=
  "✅ "+(language==="ne"?"सही उत्तर! +":"Correct! +")+
  (10+bonus)+" XP";
+
+ speakText(language==="ne"?"सही उत्तर!":"Correct answer!");
 
  }else{
 
@@ -557,6 +731,8 @@ function answer(choice){
  document.getElementById("feedback").textContent=
  "❌ "+(language==="ne"?"सही उत्तर: ":"Correct answer: ")+
  (language==="ne"?q[3][correct]:q[4][correct]);
+
+ speakText(language==="ne"?"गलत उत्तर!":"Wrong answer!");
 
  }
 
@@ -577,9 +753,13 @@ function nextQuestion(){
  current++;
 
  if(current<questions.length){
+
  showQuestion();
+
  }else{
+
  finishGame();
+
  }
 
 }
@@ -589,6 +769,10 @@ function nextQuestion(){
 function finishGame(){
 
  clearInterval(timerInterval);
+
+ if("speechSynthesis" in window){
+ speechSynthesis.cancel();
+ }
 
  totalXP+=points;
 
@@ -617,25 +801,34 @@ function finishGame(){
 
  updateStats();
 
+ speakText(language==="ne"?
+ "खेल समाप्त भयो। तपाईंको स्कोर "+points+" अंक हो।":
+ "Game over. Your score is "+points+" points.");
+
 }
 
-// ================= DAILY CHALLENGE =================
+// ================= LEADERBOARD =================
 
 function saveLeaderboard(score){
 
  let name=localStorage.playerName;
 
  if(!name){
+
  name=prompt("Enter your player name:")||"Player";
+
  localStorage.playerName=name;
+
  }
 
  let list=JSON.parse(localStorage.leaderboard||"[]");
 
  list.push({
+
  name:name,
  score:score,
  date:new Date().toLocaleDateString()
+
  });
 
  list.sort((a,b)=>b.score-a.score);
@@ -643,6 +836,20 @@ function saveLeaderboard(score){
  list=list.slice(0,10);
 
  localStorage.leaderboard=JSON.stringify(list);
+
+}
+
+function escapeHTML(value){
+
+ return String(value).replace(/[&<>"']/g,c=>({
+
+ "&":"&amp;",
+ "<":"&lt;",
+ ">":"&gt;",
+ '"':"&quot;",
+ "'":"&#39;"
+
+ }[c]));
 
 }
 
@@ -658,15 +865,26 @@ function showLeaderboard(){
  let list=JSON.parse(localStorage.leaderboard||"[]");
 
  document.getElementById("ranking").innerHTML=
+
  list.length?
+
  list.map((p,i)=>`
+
  <div class="rank">
+
  ${["🥇","🥈","🥉"][i]||"🏅"}
- ${p.name} — <b>${p.score} Points</b>
- <small> ${p.date}</small>
+
+ ${escapeHTML(p.name)} —
+ <b>${p.score} Points</b>
+
+ <small>${escapeHTML(p.date)}</small>
+
  </div>
+
  `).join("")
+
  :
+
  "<p>No scores yet. Play your first game!</p>";
 
 }
@@ -677,6 +895,10 @@ function goHome(){
 
  clearInterval(timerInterval);
 
+ if("speechSynthesis" in window){
+ speechSynthesis.cancel();
+ }
+
  document.getElementById("game").classList.add("hide");
  document.getElementById("result").classList.add("hide");
  document.getElementById("leaderboard").classList.add("hide");
@@ -685,6 +907,8 @@ function goHome(){
  updateStats();
 
 }
+
+// ================= INIT =================
 
 renderCategories();
 updateStats();
