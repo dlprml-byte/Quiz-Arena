@@ -341,4 +341,354 @@ const bank=[
 
 ["science","सूर्य के हो?","What is the Sun?",["ग्रह","तारा","उपग्रह","धूमकेतु"],["Planet","Star","Satellite","Comet"],1],
 
-["science","बिरुवाले खाना बन
+["science","बिरुवाले खाना बनाउने प्रक्रिया के हो?","What is photosynthesis?",["प्रकाश संश्लेषण","पाचन","वाष्पीकरण","श्वासप्रश्वास"],["Photosynthesis","Digestion","Evaporation","Respiration"],0],
+
+["geo","सबैभन्दा ठूलो महासागर कुन हो?","Which is the largest ocean?",["हिन्द","प्रशान्त","आर्कटिक","आन्ध्र"],["Indian","Pacific","Arctic","Atlantic"],1],
+
+["geo","जापानको राजधानी कुन हो?","What is Japan's capital?",["टोकियो","ओसाका","क्योटो","नारा"],["Tokyo","Osaka","Kyoto","Nara"],0],
+
+["geo","विश्वमा कति महादेश छन्?","How many continents are there?",["५","६","७","८"],["5","6","7","8"],2],
+
+["geo","सबैभन्दा ठूलो देश कुन हो?","Which is the largest country by area?",["चीन","रुस","भारत","क्यानडा"],["China","Russia","India","Canada"],1],
+
+["history","ताजमहल कसले बनाएका हुन्?","Who commissioned the Taj Mahal?",["अकबर","शाहजहाँ","बाबर","औरंगजेब"],["Akbar","Shah Jahan","Babur","Aurangzeb"],1],
+
+["history","फ्रान्सेली क्रान्ति कहिले सुरु भयो?","When did the French Revolution begin?",["१७७६","१७८९","१८१५","१९१४"],["1776","1789","1815","1914"],1],
+
+["sports","क्रिकेटमा एक ओभरमा कति बल हुन्छन्?","How many legal balls are in an over?",["५","६","७","८"],["5","6","7","8"],1],
+
+["sports","फुटबलमा एक टोलीका कति खेलाडी हुन्छन्?","How many players are on a football team on the field?",["९","१०","११","१२"],["9","10","11","12"],2],
+
+["sports","ओलम्पिक खेल कति वर्षमा हुन्छ?","How often are the Summer Olympics held?",["२","३","४","५"],["2","3","4","5"],2],
+
+["tech","CPU को पूरा रूप के हो?","What does CPU stand for?",["Central Processing Unit","Computer Power Unit","Central Program Unit","Control Processing Unit"],["Central Processing Unit","Computer Power Unit","Central Program Unit","Control Processing Unit"],0],
+
+["tech","WWW को पूरा रूप के हो?","What does WWW stand for?",["World Wide Web","Wide World Web","Web World Work","World Web Window"],["World Wide Web","Wide World Web","Web World Work","World Web Window"],0],
+
+["math","१२ × ८ कति हुन्छ?","What is 12 × 8?",["८६","९६","१०६","११२"],["86","96","106","112"],1],
+
+["math","१०० को २५ प्रतिशत कति हो?","What is 25% of 100?",["१५","२०","२५","३०"],["15","20","25","30"],2],
+
+["math","१ किलोमिटरमा कति मिटर हुन्छ?","How many metres are in 1 kilometre?",["१००","५००","१०००","१००००"],["100","500","1000","10000"],2],
+
+["lit","मुनामदनका लेखक को हुन्?","Who wrote Muna Madan?",["भानुभक्त","देवकोटा","पारिजात","लेखनाथ"],["Bhanubhakta","Devkota","Parijat","Lekhnath"],1],
+
+["lit","नेपाली भाषाका आदिकवि को हुन्?","Who is known as Adikavi?",["भानुभक्त आचार्य","देवकोटा","पारिजात","मोतीराम"],["Bhanubhakta Acharya","Devkota","Parijat","Motiram"],0]
+
+];
+
+// ================= GAME DATA =================
+
+let questions=[];
+let current=0;
+let points=0;
+let timer=15;
+let timerInterval=null;
+let answered=false;
+let dailyMode=false;
+
+let totalXP=Number(localStorage.totalXP||0);
+
+function getLevel(){
+ return Math.min(100,Math.floor(totalXP/100)+1);
+}
+
+function updateStats(){
+ document.getElementById("best").textContent=
+ localStorage.bestScore||0;
+
+ document.getElementById("xp").textContent=totalXP;
+
+ document.getElementById("level").textContent=getLevel();
+}
+
+// ================= SOUND =================
+
+function sound(freq,duration){
+ try{
+ let ctx=new (window.AudioContext||window.webkitAudioContext)();
+ let osc=ctx.createOscillator();
+ let gain=ctx.createGain();
+
+ osc.frequency.value=freq;
+ gain.gain.value=0.08;
+
+ osc.connect(gain);
+ gain.connect(ctx.destination);
+
+ osc.start();
+ osc.stop(ctx.currentTime+duration);
+ }catch(e){}
+}
+
+// ================= SHUFFLE =================
+
+function shuffle(arr){
+ let a=[...arr];
+
+ for(let i=a.length-1;i>0;i--){
+ let j=Math.floor(Math.random()*(i+1));
+ [a[i],a[j]]=[a[j],a[i]];
+ }
+
+ return a;
+}
+
+// ================= START GAME =================
+
+function startGame(daily){
+
+ clearInterval(timerInterval);
+
+ dailyMode=daily;
+
+ let pool=bank.filter(q=>
+ selected==="all"||q[0]===selected
+ );
+
+ if(daily){
+ pool=shuffle([...bank]);
+ }
+
+ questions=shuffle([...pool]).slice(0,10);
+
+ current=0;
+ points=0;
+
+ document.getElementById("home").classList.add("hide");
+ document.getElementById("result").classList.add("hide");
+ document.getElementById("leaderboard").classList.add("hide");
+ document.getElementById("game").classList.remove("hide");
+
+ showQuestion();
+}
+
+// ================= QUESTION =================
+
+function showQuestion(){
+
+ answered=false;
+ timer=15;
+
+ let q=questions[current];
+
+ document.getElementById("qnum").textContent=
+ (current+1)+"/"+questions.length;
+
+ document.getElementById("score").textContent=points;
+
+ document.getElementById("gameLevel").textContent=getLevel();
+
+ document.getElementById("question").textContent=
+ language==="ne"?q[1]:q[2];
+
+ document.getElementById("bar").style.width=
+ (current/questions.length*100)+"%";
+
+ document.getElementById("feedback").textContent="";
+
+ document.getElementById("next").classList.add("hide");
+
+ let options=language==="ne"?q[3]:q[4];
+
+ document.getElementById("answers").innerHTML=
+ options.map((a,i)=>`
+ <button class="option" onclick="answer(${i})">
+ ${["A","B","C","D"][i]}. ${a}
+ </button>
+ `).join("");
+
+ updateTimer();
+
+ timerInterval=setInterval(()=>{
+ timer--;
+ updateTimer();
+
+ if(timer<=0){
+ clearInterval(timerInterval);
+ answer(-1);
+ }
+ },1000);
+
+}
+
+function updateTimer(){
+ document.getElementById("timer").textContent=
+ "⏱ "+timer;
+}
+
+// ================= ANSWER =================
+
+function answer(choice){
+
+ if(answered)return;
+
+ answered=true;
+
+ clearInterval(timerInterval);
+
+ let q=questions[current];
+ let correct=q[5];
+
+ let buttons=document.querySelectorAll(".option");
+
+ buttons.forEach((b,i)=>{
+ b.disabled=true;
+
+ if(i===correct)b.classList.add("correct");
+ else if(i===choice)b.classList.add("wrong");
+ });
+
+ if(choice===correct){
+
+ let bonus=timer>=10?5:0;
+
+ points+=10+bonus;
+ sound(800,0.15);
+
+ document.getElementById("feedback").textContent=
+ "✅ "+(language==="ne"?"सही उत्तर! +":"Correct! +")+
+ (10+bonus)+" XP";
+
+ }else{
+
+ sound(180,0.2);
+
+ document.getElementById("feedback").textContent=
+ "❌ "+(language==="ne"?"सही उत्तर: ":"Correct answer: ")+
+ (language==="ne"?q[3][correct]:q[4][correct]);
+
+ }
+
+ document.getElementById("score").textContent=points;
+
+ document.getElementById("next").classList.remove("hide");
+
+ document.getElementById("next").textContent=
+ current===questions.length-1?
+ "🏆 FINISH":"NEXT ➜";
+
+}
+
+// ================= NEXT =================
+
+function nextQuestion(){
+
+ current++;
+
+ if(current<questions.length){
+ showQuestion();
+ }else{
+ finishGame();
+ }
+
+}
+
+// ================= FINISH =================
+
+function finishGame(){
+
+ clearInterval(timerInterval);
+
+ totalXP+=points;
+
+ localStorage.totalXP=totalXP;
+
+ let best=Number(localStorage.bestScore||0);
+
+ if(points>best){
+ localStorage.bestScore=points;
+ }
+
+ saveLeaderboard(points);
+
+ document.getElementById("game").classList.add("hide");
+ document.getElementById("result").classList.remove("hide");
+
+ document.getElementById("finalScore").textContent=points;
+
+ document.getElementById("resultMessage").textContent=
+ points>=80?"🏆 Excellent!":
+ points>=50?"🔥 Great Job!":
+ "👏 Keep Practicing!";
+
+ document.getElementById("resultDetails").textContent=
+ "Level: "+getLevel()+" | Total XP: "+totalXP;
+
+ updateStats();
+
+}
+
+// ================= DAILY CHALLENGE =================
+
+function saveLeaderboard(score){
+
+ let name=localStorage.playerName;
+
+ if(!name){
+ name=prompt("Enter your player name:")||"Player";
+ localStorage.playerName=name;
+ }
+
+ let list=JSON.parse(localStorage.leaderboard||"[]");
+
+ list.push({
+ name:name,
+ score:score,
+ date:new Date().toLocaleDateString()
+ });
+
+ list.sort((a,b)=>b.score-a.score);
+
+ list=list.slice(0,10);
+
+ localStorage.leaderboard=JSON.stringify(list);
+
+}
+
+// ================= LEADERBOARD =================
+
+function showLeaderboard(){
+
+ document.getElementById("home").classList.add("hide");
+ document.getElementById("game").classList.add("hide");
+ document.getElementById("result").classList.add("hide");
+ document.getElementById("leaderboard").classList.remove("hide");
+
+ let list=JSON.parse(localStorage.leaderboard||"[]");
+
+ document.getElementById("ranking").innerHTML=
+ list.length?
+ list.map((p,i)=>`
+ <div class="rank">
+ ${["🥇","🥈","🥉"][i]||"🏅"}
+ ${p.name} — <b>${p.score} Points</b>
+ <small> ${p.date}</small>
+ </div>
+ `).join("")
+ :
+ "<p>No scores yet. Play your first game!</p>";
+
+}
+
+// ================= HOME =================
+
+function goHome(){
+
+ clearInterval(timerInterval);
+
+ document.getElementById("game").classList.add("hide");
+ document.getElementById("result").classList.add("hide");
+ document.getElementById("leaderboard").classList.add("hide");
+ document.getElementById("home").classList.remove("hide");
+
+ updateStats();
+
+}
+
+renderCategories();
+updateStats();
+
+</script>
+</body>
+</html>
