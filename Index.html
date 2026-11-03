@@ -1,0 +1,449 @@
+
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#171044">
+<title>QUIZ ARENA | Dilip Rimal</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;padding:15px;color:white;font-family:Arial,sans-serif;
+ background:radial-gradient(circle at top,#5540a8,#171044 60%,#08091e);
+ min-height:100vh
+}
+.app{max-width:520px;margin:auto}
+header{text-align:center;padding:20px 5px}
+.logo{
+ width:78px;height:78px;margin:auto;border-radius:25px;
+ display:grid;place-items:center;font-size:42px;font-weight:bold;
+ color:#32164f;background:linear-gradient(145deg,#ffe477,#ff762d);
+ box-shadow:0 8px 25px #ff9b4770
+}
+h1{font-size:29px;letter-spacing:2px;margin:12px 0 5px}
+.sub{color:#d0c8f5;font-size:13px}
+.card{
+ background:linear-gradient(145deg,#ffffff20,#ffffff09);
+ border:1px solid #ffffff30;border-radius:22px;
+ padding:18px;margin:14px 0;box-shadow:0 12px 28px #0004
+}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}
+.stat{text-align:center;padding:12px 4px;border-radius:14px;background:#ffffff12}
+.stat b{display:block;font-size:21px;color:#ffd36b}
+.stat small{font-size:11px;color:#ddd6ff}
+button,select{border:0;border-radius:14px;padding:14px;color:white;font-weight:bold;font-size:14px;cursor:pointer}
+button:active{transform:scale(.97)}
+.primary{
+ width:100%;background:linear-gradient(135deg,#ffcf55,#ff762d);
+ color:#32164f;box-shadow:0 5px 0 #a94a20;margin-top:12px
+}
+.category{
+ width:100%;text-align:left;margin:7px 0;
+ background:linear-gradient(135deg,#5141a4,#292064);
+ border:1px solid #ffffff30
+}
+.category span{float:right}
+select{background:#33266e;border:1px solid #ffffff40}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hidden{display:none!important}
+.question{font-size:20px;line-height:1.5;font-weight:bold;margin:20px 0}
+.option{
+ display:block;width:100%;text-align:left;margin:9px 0;
+ background:#ffffff13;border:1px solid #ffffff35;color:white;border-radius:14px
+}
+.option.correct{background:#16864d;border-color:#54ff9d}
+.option.wrong{background:#a8324b;border-color:#ff9eaa}
+.option:disabled{opacity:1}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tools button{padding:12px 4px;background:#30266c;border:1px solid #ffffff35;font-size:12px}
+.timer{font-size:22px;color:#ffd36b;font-weight:bold}
+.progress{height:8px;background:#ffffff20;border-radius:10px;overflow:hidden;margin:13px 0}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#ff9b38,#ffe16b)}
+.message{text-align:center;color:#ffe29a;min-height:25px;font-size:13px;line-height:1.5}
+.voicebtn{background:linear-gradient(135deg,#168dba,#5141a4);border:1px solid #ffffff50}
+.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.level{padding:8px 2px;text-align:center;background:#ffffff12;border-radius:8px;font-size:11px}
+footer{text-align:center;color:#c6bde9;font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+ <div class="logo">Q</div>
+ <h1>QUIZ ARENA</h1>
+ <div class="sub">ज्ञानको खेल · The Ultimate Quiz Challenge</div>
+</header>
+
+<div id="home">
+ <div class="card">
+  <div class="row">
+   <b>🏆 PLAYER PROFILE</b>
+   <select id="language" onchange="changeLanguage()">
+    <option value="ne">नेपाली</option>
+    <option value="en">English</option>
+   </select>
+  </div>
+  <div class="stats">
+   <div class="stat"><b id="best">0</b><small>Best Score</small></div>
+   <div class="stat"><b id="coins">0</b><small>Coins 🪙</small></div>
+   <div class="stat"><b id="games">0</b><small>Games Played</small></div>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>🎯 Choose Your Category</h3>
+  <button class="category" onclick="startGame('general')">🌍 General Knowledge <span>›</span></button>
+  <button class="category" onclick="startGame('science')">🔬 Science <span>›</span></button>
+  <button class="category" onclick="startGame('sports')">⚽ Sports <span>›</span></button>
+  <button class="category" onclick="startGame('technology')">💻 Technology <span>›</span></button>
+  <button class="category" onclick="startGame('nepal')">🇳🇵 Nepal Special <span>›</span></button>
+  <button class="primary" onclick="startGame('mixed')">🚀 PLAY MIXED QUIZ</button>
+ </div>
+
+ <div class="card">
+  <h3>🏅 Your Achievement</h3>
+  <div class="levels">
+   <div class="level">🥉<br>Beginner</div>
+   <div class="level">🥈<br>Expert</div>
+   <div class="level">🥇<br>Master</div>
+   <div class="level">🏆<br>Champion</div>
+   <div class="level">👑<br>Legend</div>
+  </div>
+  <p class="sub">प्रश्न खेल्दै आफ्नो स्कोर बढाउनुहोस्।</p>
+ </div>
+</div>
+
+<div id="game" class="hidden">
+ <div class="card">
+  <div class="row">
+   <b id="categoryName">QUIZ</b>
+   <div class="timer">⏱ <span id="time">15</span>s</div>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="row">
+   <small id="questionNumber">Question 1</small>
+   <b>⭐ <span id="score">0</span></b>
+  </div>
+  <div class="question" id="question"></div>
+  <button class="voicebtn" onclick="speakQuestion()">🔊 <span id="repeatText">प्रश्न फेरि सुन्नुहोस्</span></button>
+  <div id="options"></div>
+  <div class="message" id="message"></div>
+ </div>
+
+ <div class="card">
+  <div class="tools">
+   <button onclick="useFifty()">✂️ 50:50</button>
+   <button onclick="useHint()">💡 Hint</button>
+   <button onclick="useAudience()">👥 Poll</button>
+  </div>
+ </div>
+ <button class="primary" id="nextBtn" onclick="nextQuestion()" disabled>Next Question ➜</button>
+ <button class="category" onclick="finishGame()">🏁 Finish Game</button>
+</div>
+
+<div id="result" class="hidden">
+ <div class="card" style="text-align:center">
+  <div style="font-size:55px">🏆</div>
+  <h2 id="resultTitle">Quiz Completed!</h2>
+  <p class="sub">Your Final Score</p>
+  <h1 style="color:#ffd36b;font-size:48px" id="finalScore">0</h1>
+  <p id="resultText"></p>
+  <button class="voicebtn" onclick="speakResult()">🔊 Listen to Result</button>
+  <button class="primary" onclick="goHome()">🏠 Back to Home</button>
+  <button class="category" onclick="startGame('mixed')">🔄 Play Again</button>
+ </div>
+</div>
+
+<footer>
+ QUIZ ARENA · LEARN • PLAY • WIN<br>
+ Developed by <b>Dilip Rimal</b>
+</footer>
+</div>
+
+<script>
+const bank={
+general:[
+["नेपालको राजधानी कुन हो?","What is the capital of Nepal?",["पोखरा","काठमाडौं","विराटनगर","ललितपुर"],["Pokhara","Kathmandu","Biratnagar","Lalitpur"],1,"नेपालको संघीय राजधानी।"],
+["नेपालको राष्ट्रिय फूल कुन हो?","What is Nepal's national flower?",["गुलाब","कमल","लालीगुराँस","सयपत्री"],["Rose","Lotus","Rhododendron","Marigold"],2,"पहाडी क्षेत्रमा फुल्ने रातो फूल।"],
+["विश्वको सबैभन्दा अग्लो हिमाल कुन हो?","Which is the world's highest mountain?",["K2","कञ्चनजङ्घा","सगरमाथा","धौलागिरी"],["K2","Kangchenjunga","Everest","Dhaulagiri"],2,"नेपाल र चीनको सीमामा पर्छ।"],
+["नेपालको राष्ट्रिय जनावर कुन हो?","What is Nepal's national animal?",["गाई","बाघ","हात्ती","घोडा"],["Cow","Tiger","Elephant","Horse"],0,"नेपालमा पूजनीय मानिने जनावर।"],
+["नेपालमा कति प्रदेश छन्?","How many provinces are in Nepal?",["५","६","७","८"],["5","6","7","8"],2,"संघीय संरचनामा छन्।"],
+["नेपालको राष्ट्रिय पक्षी कुन हो?","What is Nepal's national bird?",["डाँफे","मयूर","काग","चील"],["Danphe","Peacock","Crow","Eagle"],0,"हिमाली क्षेत्रमा पाइने सुन्दर चरा।"],
+["लुम्बिनी कसको जन्मस्थल हो?","Lumbini is the birthplace of whom?",["राम","गौतम बुद्ध","सीता","अरनिको"],["Ram","Gautama Buddha","Sita","Araniko"],1,"शान्तिका अग्रदूत।"],
+["नेपालको मुद्रा के हो?","What is Nepal's currency?",["रुपैयाँ","डलर","टक","युआन"],["Rupee","Dollar","Taka","Yuan"],0,"नेपाली रुपैयाँ।"]
+],
+science:[
+["पानीको रासायनिक सूत्र के हो?","What is the chemical formula of water?",["CO2","H2O","O2","NaCl"],["CO2","H2O","O2","NaCl"],1,"दुई हाइड्रोजन र एक अक्सिजन।"],
+["रगत पम्प गर्ने अंग कुन हो?","Which organ pumps blood?",["फोक्सो","मिर्गौला","मुटु","कलेजो"],["Lungs","Kidneys","Heart","Liver"],2,"यसले शरीरभरि रगत पठाउँछ।"],
+["सूर्यबाट के प्राप्त हुन्छ?","What do we get from the Sun?",["प्रकाश र ताप","हिउँ","ध्वनि","माटो"],["Light and heat","Snow","Sound","Soil"],0,"दिनमा उज्यालो दिने तारा।"],
+["बोटबिरुवाले खाना बनाउने प्रक्रियालाई के भनिन्छ?","What is the process plants use to make food?",["श्वासप्रश्वास","प्रकाश संश्लेषण","वाष्पीकरण","पाचन"],["Respiration","Photosynthesis","Evaporation","Digestion"],1,"यसमा सूर्यको प्रकाश प्रयोग हुन्छ।"],
+["मानिसले सास फेर्न कुन ग्यास चाहिन्छ?","Which gas do humans need to breathe?",["नाइट्रोजन","कार्बन डाइअक्साइड","अक्सिजन","हिलियम"],["Nitrogen","Carbon dioxide","Oxygen","Helium"],2,"हावामा करिब २१ प्रतिशत हुन्छ।"],
+["पृथ्वीको प्राकृतिक उपग्रह कुन हो?","What is Earth's natural satellite?",["मंगल","चन्द्रमा","सूर्य","शुक्र"],["Mars","Moon","Sun","Venus"],1,"राति आकाशमा देखिन्छ।"],
+["मानिसको शरीरमा कति फोक्सो हुन्छन्?","How many lungs does a human have?",["१","२","३","४"],["1","2","3","4"],1,"दायाँ र बायाँ।"],
+["पानी सामान्य अवस्थामा कति डिग्रीमा जम्छ?","At what temperature does water freeze?",["०°C","५०°C","१००°C","२०°C"],["0°C","50°C","100°C","20°C"],0,"शून्य डिग्री सेल्सियस।"]
+],
+sports:[
+["फुटबलमा एउटा टोलीबाट मैदानमा कति खेलाडी हुन्छन्?","How many players are on a football team on the field?",["९","१०","११","१२"],["9","10","11","12"],2,"गोलकिपरसहित।"],
+["क्रिकेटमा एक ओभरमा कति वैध बल हुन्छन्?","How many legal balls are in an over?",["४","५","६","८"],["4","5","6","8"],2,"सामान्य ओभरको संख्या।"],
+["ओलम्पिक खेल कति वर्षमा आयोजना हुन्छ?","How often are the Summer Olympics held?",["२","३","४","५"],["2","3","4","5"],2,"चार वर्षको अन्तरालमा।"],
+["बास्केटबलमा एक टोलीका कति खेलाडी कोर्टमा हुन्छन्?","How many players per basketball team are on court?",["४","५","६","७"],["4","5","6","7"],1,"दुवै टोलीका खेलाडी जोड्दा १०।"],
+["टेनिसमा शून्य स्कोरलाई के भनिन्छ?","What is zero called in tennis?",["Nil","Love","Duck","Blank"],["Nil","Love","Duck","Blank"],1,"टेनिसमा प्रयोग हुने शब्द।"],
+["क्रिकेटमा छ बलमा छ छक्का हान्नेलाई के भनिन्छ?","What is hitting six sixes in an over called?",["ह्याट्रिक","सिक्सर","सिक्स सिक्स","डक"],["Hat-trick","Six sixes","Six sixes","Duck"],2,"एउटै ओभरका सबै बलमा छक्का।"],
+["फुटबल विश्वकप कति वर्षमा हुन्छ?","How often is the FIFA World Cup held?",["२","३","४","५"],["2","3","4","5"],2,"चार वर्षमा एकपटक।"],
+["ब्याडमिन्टनमा प्रयोग हुने वस्तु के हो?","What is used in badminton?",["बल","शटलकक","डिस्क","ब्याट"],["Ball","Shuttlecock","Disc","Bat"],1,"प्वाँख वा प्लास्टिकको हुन्छ।"]
+],
+technology:[
+["CPU को पूरा रूप के हो?","What does CPU stand for?",["Central Processing Unit","Computer Power Unit","Central Program Utility","Control Processing User"],["Central Processing Unit","Computer Power Unit","Central Program Utility","Control Processing User"],0,"कम्प्युटरको मुख्य प्रोसेसिङ भाग।"],
+["HTML मुख्यतः के बनाउन प्रयोग हुन्छ?","What is HTML mainly used to create?",["वेब पेज","भिडियो","क्यामेरा","अपरेटिङ सिस्टम"],["Web pages","Videos","Camera","Operating systems"],0,"वेबसाइटको संरचना बनाउँछ।"],
+["WWW को पूरा रूप के हो?","What does WWW stand for?",["World Wide Web","World Web Window","Wide World Wire","Web World Work"],["World Wide Web","World Web Window","Wide World Wire","Web World Work"],0,"इन्टरनेटमा वेब पेजहरूको प्रणाली।"],
+["स्थायी फाइल राख्न कुन उपकरण प्रयोग हुन्छ?","Which device stores files persistently?",["RAM","SSD","CPU","किबोर्ड"],["RAM","SSD","CPU","Keyboard"],1,"Solid State Drive।"],
+["Android कुन प्रकारको सफ्टवेयर हो?","What type of software is Android?",["गेम","अपरेटिङ सिस्टम","ब्राउजर","एन्टिभाइरस"],["Game","Operating system","Browser","Antivirus"],1,"मोबाइल चलाउने मुख्य प्रणाली।"],
+["AI को पूरा रूप के हो?","What does AI stand for?",["Automatic Internet","Artificial Intelligence","Advanced Input","Active Information"],["Automatic Internet","Artificial Intelligence","Advanced Input","Active Information"],1,"मेसिनलाई बुद्धिमानी काम गर्न सक्षम बनाउने प्रविधि।"],
+["कम्प्युटरको माउस केका लागि प्रयोग हुन्छ?","What is a computer mouse used for?",["टाइप गर्न","कर्सर चलाउन","प्रिन्ट गर्न","आवाज निकाल्न"],["Typing","Moving the cursor","Printing","Playing sound"],1,"स्क्रिनमा pointer चलाउँछ।"],
+["इमेलको पूरा रूप के हो?","What does email mean?",["Electronic Mail","Easy Mail","Electric Machine","External Mail"],["Electronic Mail","Easy Mail","Electric Machine","External Mail"],0,"इन्टरनेटबाट पठाइने पत्र।"]
+],
+nepal:[
+["नेपालको राष्ट्रिय झण्डामा कति त्रिकोण छन्?","How many triangles are in Nepal's national flag?",["१","२","३","४"],["1","2","3","4"],1,"नेपालको झण्डा दुई त्रिकोण मिलेर बनेको छ।"],
+["नेपालको सबैभन्दा ठूलो ताल कुन हो?","Which is the largest lake in Nepal?",["फेवा","रारा","बेगनास","तिलिचो"],["Phewa","Rara","Begnas","Tilicho"],1,"कर्णाली प्रदेशमा रहेको ताल।"],
+["नेपालको सबैभन्दा लामो नदी कुन हो?","Which is the longest river in Nepal?",["कोशी","गण्डकी","कर्णाली","बागमती"],["Koshi","Gandaki","Karnali","Bagmati"],2,"पश्चिम नेपाल हुँदै बग्ने नदी।"],
+["नेपालको संविधान दिवस कहिले मनाइन्छ?","When is Constitution Day celebrated in Nepal?",["असोज ३","जेठ १५","फागुन ७","माघ १"],["Ashoj 3","Jestha 15","Falgun 7","Magh 1"],0,"संविधान जारी भएको दिन।"],
+["पोखरा कुन प्रदेशमा पर्छ?","Which province is Pokhara in?",["कोशी","गण्डकी","लुम्बिनी","बागमती"],["Koshi","Gandaki","Lumbini","Bagmati"],1,"गण्डकी प्रदेशको राजधानी।"],
+["नेपालको राष्ट्रिय खेल कुन हो?","What is Nepal's national sport?",["फुटबल","क्रिकेट","भलिबल","कबड्डी"],["Football","Cricket","Volleyball","Kabaddi"],2,"नेपालको राष्ट्रिय खेल।"],
+["सगरमाथा कुन जिल्लामा पर्छ?","Which district is Mount Everest in?",["कास्की","सोलुखुम्बु","मुस्ताङ","गोरखा"],["Kaski","Solukhumbu","Mustang","Gorkha"],1,"खुम्बु क्षेत्र।"],
+["नेपालको पहिलो जननिर्वाचित प्रधानमन्त्री को हुन्?","Who was Nepal's first elected Prime Minister?",["बीपी कोइराला","टंकप्रसाद आचार्य","मातृकाप्रसाद कोइराला","गिरिजाप्रसाद कोइराला"],["B. P. Koirala","Tanka Prasad Acharya","Matrika Prasad Koirala","Girija Prasad Koirala"],0,"२०१५ सालको आम निर्वाचनपछि प्रधानमन्त्री बनेका नेता।"]
+]
+};
+
+let lang="ne",questions=[],pool=[],poolPosition=0;
+let category="mixed",score=0,time=15,timer=null,locked=false;
+let usedFifty=false,usedHint=false,usedPoll=false;
+let questionCount=0,correctCount=0,gameCounted=false;
+
+let best=Number(localStorage.getItem("qa_best")||0);
+let coins=Number(localStorage.getItem("qa_coins")||0);
+let games=Number(localStorage.getItem("qa_games")||0);
+
+const $=id=>document.getElementById(id);
+
+function shuffle(arr){
+ let a=[...arr];
+ for(let i=a.length-1;i>0;i--){
+  let j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+
+function speak(text){
+ if(!("speechSynthesis" in window)){
+  $("message").textContent="Voice is not supported in this browser.";
+  return;
+ }
+ speechSynthesis.cancel();
+ let u=new SpeechSynthesisUtterance(text);
+ u.lang=lang==="ne"?"ne-NP":"en-US";
+ u.rate=.9;
+ speechSynthesis.speak(u);
+}
+
+function speakQuestion(){
+ if(!questions.length)return;
+ let q=questions[pool[poolPosition-1]];
+ speak(lang==="ne"?q[0]:q[1]);
+}
+
+function speakResult(){
+ let t=lang==="ne"
+ ? "तपाईंको अन्तिम स्कोर "+score+" अंक हो। तपाईंले "+correctCount+" प्रश्नको सही उत्तर दिनुभयो।"
+ : "Your final score is "+score+" points. You answered "+correctCount+" questions correctly.";
+ speak(t);
+}
+
+function refreshStats(){
+ $("best").textContent=best;
+ $("coins").textContent=coins;
+ $("games").textContent=games;
+}
+
+function changeLanguage(){
+ lang=$("language").value;
+}
+
+function startGame(cat){
+ category=cat;
+ questions=cat==="mixed"
+  ?Object.values(bank).flat()
+  :bank[cat];
+
+ pool=shuffle(questions.map((_,i)=>i));
+ poolPosition=0;
+ score=0;
+ questionCount=0;
+ correctCount=0;
+ gameCounted=false;
+
+ $("home").classList.add("hidden");
+ $("result").classList.add("hidden");
+ $("game").classList.remove("hidden");
+
+ $("categoryName").textContent=cat==="mixed"?"MIXED QUIZ":cat.toUpperCase();
+ nextFromPool();
+}
+
+function nextFromPool(){
+ if(poolPosition>=pool.length){
+  pool=shuffle(questions.map((_,i)=>i));
+  poolPosition=0;
+  $("message").textContent=lang==="ne"
+   ?"🎉 सबै प्रश्न सकिए! नयाँ Random Round सुरु भयो।"
+   :"All questions completed! A new random round begins.";
+ }
+ let qIndex=pool[poolPosition++];
+ showQuestion(questions[qIndex]);
+}
+
+function showQuestion(q){
+ clearInterval(timer);
+ if("speechSynthesis" in window)speechSynthesis.cancel();
+
+ locked=false;
+ usedFifty=false;
+ usedHint=false;
+ usedPoll=false;
+ time=15;
+ questionCount++;
+
+ $("time").textContent=time;
+ $("score").textContent=score;
+ $("message").textContent="";
+ $("nextBtn").disabled=true;
+ $("nextBtn").textContent="Next Question ➜";
+ $("questionNumber").textContent=(lang==="ne"?"प्रश्न ":"Question ")+questionCount;
+ $("bar").style.width=((poolPosition%pool.length)/pool.length*100)+"%";
+
+ $("question").textContent=lang==="ne"?q[0]:q[1];
+ $("options").innerHTML="";
+
+ let options=lang==="ne"?q[2]:q[3];
+ options.forEach((op,i)=>{
+  let b=document.createElement("button");
+  b.className="option";
+  b.textContent=String.fromCharCode(65+i)+". "+op;
+  b.onclick=()=>answer(i);
+  $("options").appendChild(b);
+ });
+
+ speakQuestion();
+
+ timer=setInterval(()=>{
+  time--;
+  $("time").textContent=time;
+  if(time<=0){
+   clearInterval(timer);
+   answer(-1);
+  }
+ },1000);
+}
+
+function answer(choice){
+ if(locked)return;
+ locked=true;
+ clearInterval(timer);
+ if("speechSynthesis" in window)speechSynthesis.cancel();
+
+ let q=questions[pool[poolPosition-1]];
+ let buttons=[...$("options").children];
+
+ buttons.forEach((b,i)=>{
+  b.disabled=true;
+  if(i===q[4])b.classList.add("correct");
+  if(i===choice&&choice!==q[4])b.classList.add("wrong");
+ });
+
+ if(choice===q[4]){
+  score+=100;
+  correctCount++;
+  $("message").textContent=lang==="ne"?"🎉 सही उत्तर! +100 अंक":"🎉 Correct answer! +100 points";
+  speak(lang==="ne"?"सही उत्तर! एक सय अंक प्राप्त भयो।":"Correct answer! You earned 100 points.");
+ }else{
+  let correctOption=(lang==="ne"?q[2]:q[3])[q[4]];
+  $("message").textContent=choice===-1
+   ?"⏰ "+(lang==="ne"?"समय सकियो!":"Time is up!")
+   :"❌ "+(lang==="ne"?"गलत उत्तर। सही उत्तर: ":"Wrong answer. Correct answer: ")+correctOption;
+  speak(lang==="ne"?"गलत उत्तर। सही उत्तर "+correctOption+" हो।":"Wrong answer. The correct answer is "+correctOption);
+ }
+
+ $("score").textContent=score;
+ $("nextBtn").disabled=false;
+}
+
+function nextQuestion(){
+ if(!locked)return;
+ nextFromPool();
+}
+
+function useFifty(){
+ if(locked||usedFifty)return;
+ usedFifty=true;
+ let q=questions[pool[poolPosition-1]];
+ let wrong=[0,1,2,3].filter(i=>i!==q[4]);
+ shuffle(wrong).slice(0,2).forEach(i=>{
+  $("options").children[i].style.visibility="hidden";
+ });
+}
+
+function useHint(){
+ if(locked||usedHint)return;
+ usedHint=true;
+ let q=questions[pool[poolPosition-1]];
+ $("message").textContent="💡 "+q[5];
+ speak(q[5]);
+}
+
+function useAudience(){
+ if(locked||usedPoll)return;
+ usedPoll=true;
+ let q=questions[pool[poolPosition-1]];
+ let percent=Math.floor(55+Math.random()*35);
+ $("message").textContent="👥 Audience Poll: "+String.fromCharCode(65+q[4])+" ("+percent+"%)";
+}
+
+function finishGame(){
+ clearInterval(timer);
+ if("speechSynthesis" in window)speechSynthesis.cancel();
+
+ if(!gameCounted){
+  games++;
+  coins+=score;
+  if(score>best)best=score;
+  localStorage.setItem("qa_best",best);
+  localStorage.setItem("qa_coins",coins);
+  localStorage.setItem("qa_games",games);
+  gameCounted=true;
+ }
+ refreshStats();
+
+ $("game").classList.add("hidden");
+ $("result").classList.remove("hidden");
+ $("finalScore").textContent=score;
+ $("resultTitle").textContent=score>=800?"🏆 Quiz Champion!":"Quiz Completed!";
+ $("resultText").textContent=lang==="ne"
+  ?"जम्मा "+questionCount+" प्रश्न खेल्नुभयो। "+correctCount+" सही उत्तर दिनुभयो।"
+  :"You played "+questionCount+" questions and answered "+correctCount+" correctly.";
+}
+
+function goHome(){
+ clearInterval(timer);
+ if("speechSynthesis" in window)speechSynthesis.cancel();
+ $("game").classList.add("hidden");
+ $("result").classList.add("hidden");
+ $("home").classList.remove("hidden");
+ refreshStats();
+}
+
+refreshStats();
+</script>
+</body>
+</html>
