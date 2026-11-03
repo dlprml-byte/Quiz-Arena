@@ -3,104 +3,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#10142f">
-<title>QUIZ ARENA</title>
+<meta name="theme-color" content="#090d25">
+<title>QUIZ ARENA 2.0</title>
 
 <style>
 *{box-sizing:border-box}
 body{
  margin:0;
- font-family:Arial,sans-serif;
- background:linear-gradient(135deg,#080d25,#24245b,#501b62);
+ background:radial-gradient(circle at top,#303d83,#090d25 65%);
  color:white;
+ font-family:Arial,sans-serif;
  min-height:100vh;
- padding:15px;
+ padding:14px;
 }
-.container{max-width:600px;margin:auto}
-.header{
- text-align:center;
- padding:20px;
- font-size:30px;
- font-weight:900;
+.container{max-width:650px;margin:auto}
+header{text-align:center;padding:15px}
+.logo{
+ font-size:34px;font-weight:1000;
  color:#ffd166;
+ text-shadow:0 0 20px #ffb70066;
 }
-.header span{color:#4de3ff}
+.logo span{color:#4de3ff}
+.tagline{color:#b9c8f5;font-size:12px}
 .card{
- background:#171e43;
- border:1px solid #5969a8;
+ background:linear-gradient(145deg,#202b59,#111832);
+ border:1px solid #5368a5;
  border-radius:20px;
  padding:20px;
- margin-top:18px;
- box-shadow:0 8px 25px #0005;
+ margin:15px 0;
+ box-shadow:0 10px 30px #0005;
 }
-h1,h2{text-align:center}
-.subtitle{text-align:center;color:#bdc9ef}
+h2{text-align:center}
+button{
+ cursor:pointer;
+ border:0;
+ font-weight:bold;
+}
+.main{
+ width:100%;
+ padding:15px;
+ border-radius:12px;
+ background:linear-gradient(90deg,#ffd166,#ff9f43);
+ color:#11152e;
+ font-size:17px;
+ margin-top:12px;
+}
+.secondary{
+ background:#354477;
+ color:white;
+ padding:12px;
+ border-radius:12px;
+}
 .grid{
  display:grid;
  grid-template-columns:1fr 1fr;
  gap:10px;
 }
 .category{
- padding:18px 5px;
- background:#293663;
- color:white;
- border:1px solid #6075b8;
- border-radius:15px;
- font-weight:bold;
- font-size:15px;
-}
-button{cursor:pointer}
-.category.active{background:#a54b92;border-color:#ffd166}
-.mainbtn{
- width:100%;
- padding:16px;
- border:0;
+ padding:16px 5px;
  border-radius:13px;
- background:linear-gradient(90deg,#ffd166,#ff9f43);
- color:#15152c;
- font-weight:900;
- font-size:18px;
- margin-top:18px;
-}
-.option{
- display:block;
- width:100%;
- padding:15px;
- margin:10px 0;
- background:#293663;
+ background:#293866;
  color:white;
- border:1px solid #6879b7;
- border-radius:12px;
- text-align:left;
- font-size:16px;
+ border:1px solid #5368a5;
 }
-.option.correct{background:#087a55}
-.option.wrong{background:#a52d51}
-.hide{display:none}
-.info{
- display:flex;
- justify-content:space-between;
+.category.active{
+ background:#8449a5;
+ border:2px solid #ffd166;
+}
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:8px;
+ text-align:center;
+}
+.stat{
+ background:#0b1433;
+ padding:12px 5px;
+ border-radius:12px;
  color:#ffd166;
  font-weight:bold;
+ font-size:13px;
 }
+.option{
+ width:100%;
+ padding:15px;
+ margin:7px 0;
+ background:#293866;
+ color:white;
+ text-align:left;
+ border-radius:12px;
+ border:1px solid #6275b2;
+ font-size:15px;
+}
+.option.correct{background:#087b58}
+.option.wrong{background:#a72d50}
+.option:disabled{opacity:1}
 .progress{
  height:9px;
- background:#080d25;
+ background:#080d20;
  border-radius:10px;
  margin:15px 0;
 }
 .bar{
  height:100%;
- width:0;
- background:#4de3ff;
+ background:linear-gradient(90deg,#4de3ff,#ff4f9a);
+ width:0%;
  border-radius:10px;
 }
-#question{font-size:22px;line-height:1.5}
+.timer{
+ text-align:center;
+ font-size:30px;
+ font-weight:900;
+ color:#ffd166;
+ margin:10px;
+}
+.hide{display:none!important}
+#question{
+ font-size:21px;
+ line-height:1.5;
+ text-align:center;
+}
+#feedback{
+ text-align:center;
+ min-height:25px;
+ font-weight:bold;
+ color:#ffd166;
+}
+.result{text-align:center}
+.bigscore{
+ font-size:50px;
+ color:#ffd166;
+ font-weight:1000;
+}
+.rank{
+ padding:12px;
+ background:#26345f;
+ margin:8px 0;
+ border-radius:10px;
+}
 footer{
  text-align:center;
- margin-top:30px;
- color:#aab5d9;
- font-size:13px;
+ font-size:12px;
+ color:#aab8df;
+ padding:20px;
 }
 </style>
 </head>
@@ -108,30 +153,63 @@ footer{
 <body>
 <div class="container">
 
-<div class="header">
-🏆 QUIZ <span>ARENA</span>
+<header>
+<div class="logo">🏆 QUIZ <span>ARENA</span></div>
+<div class="tagline">THINK FAST • PLAY SMART • WIN BIG</div>
+<button class="secondary" onclick="toggleLanguage()" id="lang">
+नेपाली / English
+</button>
+</header>
+
+<!-- HOME -->
+<section id="home">
+
+<div class="card">
+<h2 id="welcome">🎮 स्वागत छ!</h2>
+
+<div class="stats">
+<div class="stat">
+⭐ BEST<br><span id="best">0</span>
+</div>
+<div class="stat">
+🏅 LEVEL<br><span id="level">1</span>
+</div>
+<div class="stat">
+💎 TOTAL XP<br><span id="xp">0</span>
+</div>
+</div>
 </div>
 
-<p class="subtitle">THINK FAST • PLAY SMART • WIN BIG</p>
-
-<div id="home" class="card">
-<h1>🎮 Welcome to Quiz Arena</h1>
-<p class="subtitle">आफ्नो ज्ञान परीक्षण गर्नुहोस्!</p>
-
-<h3>📚 Select Category</h3>
+<div class="card">
+<h3 id="selectTitle">📚 विषय छान्नुहोस्</h3>
 
 <div class="grid" id="categories"></div>
 
-<button class="mainbtn" onclick="startGame()">
-START GAME ▶
+<button class="main" onclick="startGame(false)" id="start">
+▶ START GAME
+</button>
+
+<button class="main" onclick="startGame(true)">
+🎁 DAILY CHALLENGE
+</button>
+
+<button class="main" onclick="showLeaderboard()">
+🥇 LEADERBOARD
 </button>
 </div>
 
-<div id="game" class="card hide">
-<div class="info">
-<span id="number">Question 1</span>
-<span id="score">⭐ 0</span>
+</section>
+
+<!-- GAME -->
+<section id="game" class="card hide">
+
+<div class="stats">
+<div class="stat">QUESTION<br><span id="qnum">1</span></div>
+<div class="stat">SCORE<br><span id="score">0</span></div>
+<div class="stat">LEVEL<br><span id="gameLevel">1</span></div>
 </div>
+
+<div class="timer" id="timer">⏱ 15</div>
 
 <div class="progress">
 <div class="bar" id="bar"></div>
@@ -141,223 +219,126 @@ START GAME ▶
 
 <div id="answers"></div>
 
-<h3 id="feedback"></h3>
+<div id="feedback"></div>
 
-<button class="mainbtn hide" id="next"
-onclick="nextQuestion()">NEXT ➜</button>
-</div>
+<button class="main hide" id="next" onclick="nextQuestion()">
+NEXT ➜
+</button>
 
-<div id="result" class="card hide">
+<button class="secondary" onclick="goHome()">
+EXIT GAME
+</button>
+
+</section>
+
+<!-- RESULT -->
+<section id="result" class="card hide result">
+
 <h1>🏆 GAME OVER!</h1>
-<h2 id="finalScore"></h2>
-<h3 id="bestScore"></h3>
 
-<button class="mainbtn" onclick="startGame()">
-PLAY AGAIN 🔄
+<div class="bigscore" id="finalScore">0</div>
+
+<h2 id="resultMessage">Excellent!</h2>
+
+<p id="resultDetails"></p>
+
+<button class="main" onclick="startGame(false)">
+🔄 PLAY AGAIN
 </button>
 
-<button class="mainbtn" onclick="goHome()">
-HOME 🏠
+<button class="main" onclick="goHome()">
+🏠 HOME
 </button>
-</div>
+
+</section>
+
+<!-- LEADERBOARD -->
+<section id="leaderboard" class="card hide">
+
+<h2>🥇 TOP 10 LEADERBOARD</h2>
+
+<div id="ranking"></div>
+
+<button class="main" onclick="goHome()">🏠 HOME</button>
+
+</section>
 
 <footer>
 Developed by <b>Dilip Rimal</b><br>
-QUIZ ARENA © 2026
+QUIZ ARENA VERSION 2.0<br>
+Offline Gaming Experience
 </footer>
 
 </div>
 
 <script>
 
-let selected="all";
-let questions=[];
-let current=0;
-let points=0;
-let answered=false;
-let lang="ne";
+// ================= LANGUAGE =================
+
+let language="ne";
+
+function toggleLanguage(){
+ language=language==="ne"?"en":"ne";
+ document.getElementById("lang").textContent=
+ language==="ne"?"नेपाली / English":"English / नेपाली";
+ renderCategories();
+}
+
+// ================= CATEGORIES =================
 
 const categories=[
-["all","🌈 सबै विषय"],
-["nepal","🇳🇵 नेपाल GK"],
-["science","🔬 विज्ञान"],
-["geo","🌍 भूगोल"],
-["history","📜 इतिहास"],
-["sports","🏏 खेलकुद"],
-["tech","💻 प्रविधि"],
-["math","➗ गणित"],
-["lit","📚 साहित्य"]
+ ["all","🌈 सबै विषय","All Categories"],
+ ["nepal","🇳🇵 नेपाल GK","Nepal GK"],
+ ["science","🔬 विज्ञान","Science"],
+ ["geo","🌍 भूगोल","Geography"],
+ ["history","📜 इतिहास","History"],
+ ["sports","🏏 खेलकुद","Sports"],
+ ["tech","💻 प्रविधि","Technology"],
+ ["math","➗ गणित","Mathematics"],
+ ["lit","📚 साहित्य","Literature"]
 ];
 
-const bank=[
-
-["nepal","नेपालको राजधानी कुन हो?",["काठमाडौं","पोखरा","विराटनगर","जनकपुर"],0],
-["nepal","नेपालको राष्ट्रिय फूल कुन हो?",["गुराँस","कमल","सयपत्री","चमेली"],0],
-["nepal","नेपालको अग्लो हिमाल कुन हो?",["मकालु","सगरमाथा","धौलागिरि","अन्नपूर्ण"],1],
-["nepal","नेपालमा कति प्रदेश छन्?",["५","६","७","८"],2],
-["nepal","नेपालको राष्ट्रिय पक्षी कुन हो?",["डाँफे","मयूर","चील","काग"],0],
-
-["science","पानीको रासायनिक सूत्र के हो?",["CO2","H2O","O2","NaCl"],1],
-["science","मानव शरीरमा रगत पम्प गर्ने अंग कुन हो?",["फोक्सो","मुटु","मिर्गौला","कलेजो"],1],
-["science","सूर्य एउटा के हो?",["ग्रह","तारा","उपग्रह","धूमकेतु"],1],
-["science","बिरुवाले खाना बनाउने प्रक्रिया के हो?",["प्रकाश संश्लेषण","पाचन","श्वासप्रश्वास","वाष्पीकरण"],0],
-
-["geo","विश्वको सबैभन्दा ठूलो महासागर कुन हो?",["हिन्द","प्रशान्त","आर्कटिक","आन्ध्र"],1],
-["geo","जापानको राजधानी कुन हो?",["टोकियो","ओसाका","क्योटो","नारा"],0],
-["geo","विश्वमा कति महादेश छन्?",["५","६","७","८"],2],
-
-["history","ताजमहल कसले बनाएका हुन्?",["अकबर","शाहजहाँ","बाबर","औरंगजेब"],1],
-["history","फ्रान्सेली क्रान्ति कुन वर्ष सुरु भयो?",["१७७६","१७८९","१८१५","१९१४"],1],
-
-["sports","क्रिकेटमा एक ओभरमा कति बल हुन्छन्?",["५","६","७","८"],1],
-["sports","फुटबलमा एक टोलीका कति खेलाडी मैदानमा हुन्छन्?",["९","१०","११","१२"],2],
-["sports","ओलम्पिक खेल कति वर्षमा हुन्छ?",["२","३","४","५"],2],
-
-["tech","CPU को पूरा रूप के हो?",["Central Processing Unit","Computer Power Unit","Central Program Unit","Control Processing Unit"],0],
-["tech","WWW को पूरा रूप के हो?",["World Wide Web","Wide World Web","Web World Work","World Web Window"],0],
-
-["math","१२ × ८ कति हुन्छ?",["८६","९६","१०६","११२"],1],
-["math","१०० को २५ प्रतिशत कति हो?",["१५","२०","२५","३०"],2],
-["math","१ किलोमिटरमा कति मिटर हुन्छ?",["१००","५००","१०००","१००००"],2],
-
-["lit","मुनामदनका लेखक को हुन्?",["भानुभक्त","देवकोटा","पारिजात","लेखनाथ"],1],
-["lit","नेपाली भाषाका आदिकवि को हुन्?",["भानुभक्त आचार्य","देवकोटा","पारिजात","मोतीराम"],0]
-
-];
+let selected="all";
 
 function renderCategories(){
  document.getElementById("categories").innerHTML=
  categories.map(c=>`
  <button class="category ${selected===c[0]?'active':''}"
- onclick="choose('${c[0]}')">${c[1]}</button>
- `).join("");
-}
-
-function choose(id){
- selected=id;
- renderCategories();
-}
-
-function shuffle(arr){
- return arr.sort(()=>Math.random()-.5);
-}
-
-function startGame(){
-
- let pool=bank.filter(q=>
- selected==="all" || q[0]===selected
- );
-
- questions=shuffle([...pool]).slice(0,10);
-
- current=0;
- points=0;
-
- document.getElementById("home").classList.add("hide");
- document.getElementById("result").classList.add("hide");
- document.getElementById("game").classList.remove("hide");
-
- showQuestion();
-}
-
-function showQuestion(){
-
- answered=false;
-
- let q=questions[current];
-
- document.getElementById("number").textContent=
- "Question "+(current+1)+"/"+questions.length;
-
- document.getElementById("score").textContent="⭐ "+points;
-
- document.getElementById("bar").style.width=
- (current/questions.length*100)+"%";
-
- document.getElementById("question").textContent=q[1];
-
- document.getElementById("feedback").textContent="";
-
- document.getElementById("next").classList.add("hide");
-
- document.getElementById("answers").innerHTML=
- q[2].map((a,i)=>`
- <button class="option" onclick="answer(${i})">
- ${["A","B","C","D"][i]}. ${a}
+ onclick="selectCategory('${c[0]}')">
+ ${language==="ne"?c[1]:c[2]}
  </button>
  `).join("");
 }
 
-function answer(choice){
-
- if(answered)return;
- answered=true;
-
- let q=questions[current];
-
- let buttons=document.querySelectorAll(".option");
-
- buttons.forEach((b,i)=>{
- b.disabled=true;
-
- if(i===q[3])b.classList.add("correct");
- else if(i===choice)b.classList.add("wrong");
- });
-
- if(choice===q[3]){
- points+=10;
- document.getElementById("feedback").textContent=
- "✅ सही उत्तर! +10 Points";
- }else{
- document.getElementById("feedback").textContent=
- "❌ सही उत्तर: "+q[2][q[3]];
- }
-
- document.getElementById("score").textContent="⭐ "+points;
-
- document.getElementById("next").classList.remove("hide");
+function selectCategory(id){
+ selected=id;
+ renderCategories();
 }
 
-function nextQuestion(){
+// ================= QUESTIONS =================
 
- current++;
+// Format:
+// category, Nepali question, English question,
+// Nepali answers, English answers, correct answer index
 
- if(current<questions.length){
- showQuestion();
- }else{
- finishGame();
- }
-}
+const bank=[
 
-function finishGame(){
+["nepal","नेपालको राजधानी कुन हो?","What is Nepal's capital?",["काठमाडौं","पोखरा","विराटनगर","जनकपुर"],["Kathmandu","Pokhara","Biratnagar","Janakpur"],0],
 
- document.getElementById("game").classList.add("hide");
- document.getElementById("result").classList.remove("hide");
+["nepal","नेपालको राष्ट्रिय फूल कुन हो?","What is Nepal's national flower?",["गुराँस","कमल","सयपत्री","चमेली"],["Rhododendron","Lotus","Marigold","Jasmine"],0],
 
- let best=Number(localStorage.getItem("quizBest")||0);
+["nepal","नेपालको अग्लो हिमाल कुन हो?","Which is Nepal's highest mountain?",["मकालु","सगरमाथा","धौलागिरि","अन्नपूर्ण"],["Makalu","Everest","Dhaulagiri","Annapurna"],1],
 
- if(points>best){
- best=points;
- localStorage.setItem("quizBest",best);
- }
+["nepal","नेपालमा कति प्रदेश छन्?","How many provinces are in Nepal?",["५","६","७","८"],["5","6","7","8"],2],
 
- document.getElementById("finalScore").textContent=
- "⭐ Your Score: "+points+"/"+(questions.length*10);
+["nepal","नेपालको राष्ट्रिय पक्षी कुन हो?","What is Nepal's national bird?",["डाँफे","मयूर","चील","काग"],["Danphe","Peacock","Eagle","Crow"],0],
 
- document.getElementById("bestScore").textContent=
- "🏆 Best Score: "+best;
-}
+["nepal","लुम्बिनी कुन जिल्लामा पर्छ?","Where is Lumbini located?",["रुपन्देही","पाल्पा","दाङ","कास्की"],["Rupandehi","Palpa","Dang","Kaski"],0],
 
-function goHome(){
+["science","पानीको रासायनिक सूत्र के हो?","What is water's chemical formula?",["CO2","H2O","O2","NaCl"],["CO2","H2O","O2","NaCl"],1],
 
- document.getElementById("game").classList.add("hide");
- document.getElementById("result").classList.add("hide");
- document.getElementById("home").classList.remove("hide");
+["science","रगत पम्प गर्ने अंग कुन हो?","Which organ pumps blood?",["फोक्सो","मुटु","मिर्गौला","कलेजो"],["Lungs","Heart","Kidney","Liver"],1],
 
-}
+["science","सूर्य के हो?","What is the Sun?",["ग्रह","तारा","उपग्रह","धूमकेतु"],["Planet","Star","Satellite","Comet"],1],
 
-renderCategories();
-
-</script>
-</body>
-</html>
+["science","बिरुवाले खाना बन
